@@ -1,0 +1,122 @@
+---
+import Tooltip from '../common/Tooltip.astro';
+
+interface Category {
+  id: string;
+  label: string;
+  icon: string;
+  description: string;
+  count: number;
+}
+
+interface Props {
+  categories: Category[];
+  selectedCategory?: string;
+}
+
+const { categories, selectedCategory } = Astro.props;
+---
+
+<div class="filter-container">
+  <div class="flex flex-wrap gap-4 justify-center items-center">
+    <Tooltip content="Show all projects" position="top">
+      <a
+        href="/projects"
+        class={`filter-btn ${!selectedCategory ? 'active' : ''}`}
+        data-category=""
+      >
+        <span class="icon">🔍</span>
+        <span class="label">All Projects</span>
+      </a>
+    </Tooltip>
+
+    {categories.map((category) => (
+      <Tooltip content={category.description} position="top" maxWidth="300px">
+        <a
+          href={`/projects?category=${category.id}`}
+          class={`filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
+          data-category={category.id}
+        >
+          <span class="icon">{category.icon}</span>
+          <span class="label">{category.label}</span>
+          <span class="count">({category.count})</span>
+        </a>
+      </Tooltip>
+    ))}
+  </div>
+</div>
+
+<style>
+  .filter-container {
+    position: relative;
+    z-index: 10;
+    padding: 1rem 0;
+  }
+
+  .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text);
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    min-height: 2.5rem;
+  }
+
+  .filter-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .filter-btn.active {
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 61, 0, 0.1));
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .icon {
+    font-size: 1.25rem;
+  }
+
+  .label {
+    font-weight: 500;
+  }
+
+  .count {
+    font-size: 0.875rem;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 640px) {
+    .filter-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projects = document.querySelectorAll('.project-card');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category;
+      
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      projects.forEach(project => {
+        if (category === '' || project.dataset.category === category) {
+          project.style.display = 'block';
+        } else {
+          project.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

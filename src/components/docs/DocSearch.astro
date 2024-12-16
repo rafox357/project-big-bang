@@ -1,0 +1,23 @@
+---
+---
+
+<div class="doc-search relative">
+  <input
+    type="search"
+    placeholder="Search documentation..."
+    class="w-full bg-[#1a1b26] border border-accent border-opacity-20 rounded-lg px-4 py-2 text-accent-light placeholder-accent-light/50 focus:outline-none focus:border-accent"
+  />
+  <kbd class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-accent-light/40 bg-accent bg-opacity-10 px-2 py-0.5 rounded">
+    ⌘K
+  </kbd>
+</div>
+
+<script>
+  // Add keyboard shortcut for search
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      document.querySelector('input[type="search"]')?.focus();
+    }
+  });
+</script>

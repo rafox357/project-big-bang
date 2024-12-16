@@ -1,0 +1,67 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import DocContent from '../../../components/docs/DocContent.astro';
+
+const architectureSections = [
+  {
+    title: 'System Overview',
+    content: `
+# System Architecture
+
+## Core Components
+
+The Project Big Bang ecosystem consists of several key components working together:
+
+### 1. Home Hub (Central Computer)
+- Custom hardware designed for security
+- Local AI processing capabilities
+- Encrypted storage system
+- Device management interface
+
+### 2. Secure Operating System
+- Custom-built for privacy
+- Zero-trust architecture
+- Secure boot process
+- Application sandboxing
+
+### 3. Integration Layer
+- Standardized device protocols
+- Security verification
+- Data sovereignty enforcement
+- Cross-device communication
+
+## Security Architecture
+
+Our security model is built on several key principles:
+
+1. Zero-Trust by Default
+2. End-to-End Encryption
+3. Local-First Processing
+4. Verifiable Privacy
+
+## Data Flow
+
+\`\`\`mermaid
+graph TD
+    A[Device] -->|Encrypted| B[Home Hub]
+    B -->|Local Processing| C[AI Engine]
+    B -->|Encrypted Storage| D[Local Storage]
+    B -->|Optional Sync| E[Personal Cloud]
+\`\`\`
+`
+  }
+];
+---
+
+<Layout title="System Architecture">
+  <DocContent
+    title="System Architecture"
+    description="Comprehensive overview of the Project Big Bang architecture"
+  >
+    {architectureSections.map(section => (
+      <section>
+        <div set:html={section.content} />
+      </section>
+    ))}
+  </DocContent>
+</Layout>

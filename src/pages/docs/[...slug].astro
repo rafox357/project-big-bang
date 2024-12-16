@@ -1,0 +1,57 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import DocSidebar from '../../components/docs/DocSidebar.astro';
+import DocContent from '../../components/docs/DocContent.astro';
+import DocSearch from '../../components/docs/DocSearch.astro';
+
+export async function getStaticPaths() {
+  // In a real app, this would come from a CMS or markdown files
+  return [
+    {
+      params: { slug: 'getting-started/introduction' },
+      props: {
+        title: "Introduction to Project Big Bang",
+        description: "Learn about our mission to revolutionize home computing",
+        content: `
+# Welcome to Project Big Bang
+
+Project Big Bang is an ambitious initiative to revolutionize home computing by creating a complete ecosystem of secure, private, and interconnected technologies.
+
+## Our Mission
+
+We believe that everyone deserves complete control over their digital life. That's why we're building:
+
+- A secure operating system from the ground up
+- Custom hardware for optimal security and privacy
+- A suite of applications and services
+- Local AI processing capabilities
+
+## Core Principles
+
+1. **Privacy First**: Your data belongs to you
+2. **Security by Design**: Built-in security at every level
+3. **User Control**: Complete sovereignty over your digital life
+4. **Open Development**: Community-driven innovation
+        `
+      }
+    }
+    // Add more documentation pages here
+  ];
+}
+
+const { title, description, content } = Astro.props;
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen">
+    <DocSidebar />
+    <main class="flex-1 ml-64">
+      <div class="sticky top-0 z-10 bg-[#13151a] border-b border-accent border-opacity-20 p-4">
+        <DocSearch />
+      </div>
+      <DocContent title={title} description={description}>
+        <div set:html={content} />
+      </DocContent>
+    </main>
+  </div>
+</Layout>

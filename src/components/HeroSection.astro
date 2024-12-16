@@ -1,0 +1,100 @@
+---
+---
+<section class="hero">
+  <div class="stars"></div>
+  <div class="hero-content">
+    <h1>Project Big Bang</h1>
+    <p class="tagline">Creating a New Digital Universe</p>
+    <div class="cta-buttons">
+      <a href="#projects" class="primary-btn">Explore Our Universe</a>
+      <a href="#vision" class="secondary-btn">Our Mission</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #13151a, #1a1b26);
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: twinkle 4s ease-in-out infinite;
+    opacity: 0.3;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.5; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+  }
+
+  h1 {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #ff3d00, #00e5ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(255, 61, 0, 0.3);
+  }
+
+  .tagline {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: rgb(var(--accent-light));
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+
+  .primary-btn, .secondary-btn {
+    padding: 1rem 2rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .primary-btn {
+    background: linear-gradient(45deg, #ff3d00, #00e5ff);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 61, 0, 0.3);
+  }
+
+  .secondary-btn {
+    border: 2px solid #00e5ff;
+    color: #00e5ff;
+  }
+
+  .primary-btn:hover, .secondary-btn:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.2);
+  }
+</style>

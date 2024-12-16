@@ -1,0 +1,101 @@
+---
+import ProjectCard from './projects/ProjectCard.astro';
+import ProjectFilter from './projects/ProjectFilter.astro';
+
+const categories = [
+  { id: 'all', label: 'All Projects' },
+  { id: 'websites', label: 'Websites' },
+  { id: 'webapps', label: 'Web Apps' },
+  { id: 'apps', label: 'Mobile Apps' },
+  { id: 'software', label: 'Software' },
+  { id: 'services', label: 'Services' },
+  { id: 'os', label: 'Operating System' },
+  { id: 'hardware', label: 'Hardware' }
+];
+
+const projects = [
+  {
+    title: "Secure OS",
+    category: "os",
+    description: "Privacy-focused operating system built from the ground up with state-of-the-art security features and user privacy controls.",
+    image: "/images/os.jpg",
+    link: "/projects/secure-os",
+    githubUrl: "/github/secure-os"
+  },
+  {
+    title: "E-commerce Platform",
+    category: "websites",
+    description: "Custom-built e-commerce solution with advanced security, real-time inventory, and seamless payment integration.",
+    image: "/images/ecommerce.jpg",
+    link: "/projects/ecommerce",
+    demoUrl: "https://demo-ecommerce.example.com",
+    githubUrl: "/github/ecommerce"
+  },
+  {
+    title: "Secure Messaging",
+    category: "apps",
+    description: "End-to-end encrypted communication platform with zero-knowledge architecture and self-destructing messages.",
+    image: "/images/messaging.jpg",
+    link: "/projects/messaging",
+    demoUrl: "https://demo-messaging.example.com",
+    githubUrl: "/github/messaging"
+  }
+];
+---
+
+<section id="projects" class="projects">
+  <div class="container">
+    <h2>Project Big Bang</h2>
+    <p class="subtitle">Explore our innovations in digital sovereignty</p>
+    
+    <ProjectFilter categories={categories} />
+    
+    <div class="project-grid">
+      {projects.map(project => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects {
+    padding: 4rem 0;
+    background: linear-gradient(180deg, #13151a, #1a1b26);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #00e5ff, #ff3d00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: rgb(var(--accent-light));
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+  }
+
+  @media (max-width: 768px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

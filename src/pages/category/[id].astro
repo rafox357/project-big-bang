@@ -1,0 +1,46 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProjectCard from '../../components/projects/ProjectCard.astro';
+import { getCategoryById } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const { categories } = await import('../../data/projects');
+  return categories.map(category => ({
+    params: { id: category.id },
+    props: { category }
+  }));
+}
+
+const { category } = Astro.props;
+---
+
+<Layout title={`${category.name} Projects`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="breadcrumb mb-8">
+      <a href="/projects" class="text-accent hover:text-accent-light">Projects</a>
+      <span class="mx-2">/</span>
+      <span>{category.name}</span>
+    </nav>
+
+    <div class="category-header mb-8">
+      <h1 class="text-4xl font-bold mb-4">{category.name}</h1>
+      <p class="text-xl text-accent-light/70">{category.description}</p>
+    </div>
+
+    <div class="projects-grid">
+      {category.projects.map(project => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .breadcrumb {
+    @apply text-sm;
+  }
+
+  .projects-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+  }
+</style>

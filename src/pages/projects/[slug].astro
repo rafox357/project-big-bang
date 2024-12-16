@@ -1,0 +1,93 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProjectDetails from '../../components/projects/ProjectDetails.astro';
+
+export async function getStaticPaths() {
+  // In a real app, this would come from a database or CMS
+  const projects = [
+    {
+      slug: 'secure-os',
+      title: 'Secure OS',
+      description: 'A privacy-focused operating system built from the ground up with security in mind.',
+      features: [
+        'End-to-end encryption by default',
+        'Zero-knowledge architecture',
+        'Secure boot process',
+        'Built-in privacy tools',
+        'Sandboxed applications',
+        'Real-time threat monitoring',
+        'Automatic security updates'
+      ],
+      technologies: ['Rust', 'Linux Kernel', 'TPM 2.0', 'Custom Security Modules', 'SELinux', 'Secure Boot'],
+      status: 'In Development',
+      documentation: '/docs/os'
+    },
+    {
+      slug: 'privacy-messenger',
+      title: 'Privacy Messenger',
+      description: 'A secure messaging platform that puts privacy first, featuring end-to-end encryption and self-destructing messages.',
+      features: [
+        'End-to-end encryption',
+        'Self-destructing messages',
+        'Secure group chats',
+        'File sharing',
+        'Voice and video calls',
+        'Cross-platform support',
+        'No phone number required'
+      ],
+      technologies: ['React Native', 'Signal Protocol', 'WebRTC', 'SQLite', 'Push Notifications'],
+      status: 'Beta Testing',
+      documentation: '/docs/messenger',
+      demoUrl: '/demo/messenger',
+      githubUrl: 'https://github.com/project-big-bang/privacy-messenger'
+    },
+    {
+      slug: 'smart-home-hub',
+      title: 'Smart Home Hub',
+      description: 'An open-source smart home hub that processes all data locally and prioritizes user privacy.',
+      features: [
+        'Local data processing',
+        'Device encryption',
+        'Voice control',
+        'Automation rules',
+        'Energy monitoring',
+        'Custom integrations',
+        'Offline operation'
+      ],
+      technologies: ['Raspberry Pi', 'Python', 'Node.js', 'MQTT', 'Zigbee', 'Z-Wave'],
+      status: 'Active Development',
+      documentation: '/docs/smart-home',
+      demoUrl: '/demo/smart-home'
+    },
+    {
+      slug: 'web-privacy-toolkit',
+      title: 'Web Privacy Toolkit',
+      description: 'A comprehensive toolkit for web developers to build privacy-respecting applications.',
+      features: [
+        'Privacy-first analytics',
+        'GDPR compliance tools',
+        'Cookie consent management',
+        'Data anonymization',
+        'Privacy policy generator',
+        'Security headers setup',
+        'Privacy impact assessment'
+      ],
+      technologies: ['TypeScript', 'React', 'Next.js', 'GraphQL', 'PostgreSQL'],
+      status: 'Production Ready',
+      documentation: '/docs/web-toolkit',
+      githubUrl: 'https://github.com/project-big-bang/web-privacy-toolkit'
+    }
+  ];
+
+  return projects.map(project => ({
+    params: { slug: project.slug },
+    props: { project }
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={project.title}>
+  <ProjectDetails project={project} />
+</Layout>

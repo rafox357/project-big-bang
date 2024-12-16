@@ -1,0 +1,38 @@
+---
+const features = [
+  {
+    title: "Local AI Processing",
+    description: "Process data locally with advanced AI capabilities while maintaining privacy",
+    icon: "🧠"
+  },
+  {
+    title: "Secure Storage",
+    description: "End-to-end encrypted storage for all your personal data",
+    icon: "🔒"
+  },
+  {
+    title: "Device Integration",
+    description: "Seamlessly connect and manage all your smart devices",
+    icon: "🔗"
+  },
+  {
+    title: "Privacy Controls",
+    description: "Granular control over your data and device permissions",
+    icon: "🛡️"
+  }
+];
+---
+
+<div class="space-y-8">
+  {features.map(feature => (
+    <div class="bg-accent/10 border border-accent/20 rounded-lg p-6 hover:bg-accent/20 transition-colors">
+      <div class="flex items-start gap-4">
+        <span class="text-3xl" aria-hidden="true">{feature.icon}</span>
+        <div>
+          <h3 class="text-xl font-semibold text-accent-light mb-2">{feature.title}</h3>
+          <p class="text-accent-light/80">{feature.description}</p>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>

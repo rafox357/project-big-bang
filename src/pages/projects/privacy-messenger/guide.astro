@@ -1,0 +1,153 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ProjectGuide from '../../../components/guides/ProjectGuide';
+import MessengerDemo from '../../../components/interactive/MessengerDemo';
+
+const guideContent = {
+  title: "Privacy Messenger Development Guide",
+  description: "Learn how to contribute to our secure messaging platform. This guide covers the end-to-end encryption implementation, UI development, and security best practices.",
+  sections: [
+    {
+      title: "Architecture",
+      steps: [
+        {
+          title: "End-to-End Encryption",
+          content: "Our messenger uses the Signal Protocol for end-to-end encryption, ensuring that messages can only be read by the intended recipients.",
+          code: `// Initialize Signal Protocol
+const signalProtocol = new SignalProtocol({
+  identityKeyPair,
+  registrationId,
+  deviceId
+});
+
+// Encrypt a message
+const ciphertext = await signalProtocol.encrypt(
+  recipientId,
+  messageText,
+  sessionBuilder
+);`
+        },
+        {
+          title: "Message Storage",
+          content: "Messages are stored locally using encrypted SQLite databases with secure key storage.",
+          code: `// Database schema
+CREATE TABLE messages (
+  id INTEGER PRIMARY KEY,
+  sender_id TEXT NOT NULL,
+  recipient_id TEXT NOT NULL,
+  ciphertext BLOB NOT NULL,
+  timestamp INTEGER NOT NULL,
+  read INTEGER DEFAULT 0
+);
+
+// Encryption key storage
+const keyStore = new SecureKeyStore();
+await keyStore.storeKey('db-key', generateKey());`
+        },
+        {
+          title: "Network Architecture",
+          content: "The messenger uses a peer-to-peer network with relay servers for improved privacy.",
+          image: "/images/guides/p2p-network.png"
+        }
+      ]
+    },
+    {
+      title: "Features",
+      steps: [
+        {
+          title: "Self-Destructing Messages",
+          content: "Implement messages that automatically delete after a specified time:",
+          code: `interface Message {
+  id: string;
+  content: string;
+  expiresAt?: Date;
+}
+
+function scheduleMessageDeletion(message: Message) {
+  if (message.expiresAt) {
+    const timeoutMs = message.expiresAt.getTime() - Date.now();
+    setTimeout(() => deleteMessage(message.id), timeoutMs);
+  }
+}`
+        },
+        {
+          title: "Secure File Sharing",
+          content: "Files are encrypted client-side before upload and transfer:",
+          code: `async function encryptAndUploadFile(file: File) {
+  // Generate a random key for file encryption
+  const key = await crypto.subtle.generateKey(
+    { name: 'AES-GCM', length: 256 },
+    true,
+    ['encrypt']
+  );
+
+  // Encrypt the file
+  const encryptedData = await encryptFile(file, key);
+  
+  // Upload encrypted file
+  await uploadToServer(encryptedData);
+
+  // Share the key securely with recipient
+  await shareKey(key, recipientId);
+}`
+        }
+      ]
+    },
+    {
+      title: "Security",
+      steps: [
+        {
+          title: "Security Best Practices",
+          content: "Follow these security guidelines when contributing:",
+          code: `// DO: Use secure random values
+const secureRandom = crypto.getRandomValues(new Uint8Array(32));
+
+// DON'T: Use Math.random()
+// const insecureRandom = Math.random(); // Avoid this!
+
+// DO: Validate input lengths
+function validateMessage(msg: string) {
+  if (msg.length > MAX_MESSAGE_LENGTH) {
+    throw new Error('Message too long');
+  }
+}`
+        },
+        {
+          title: "Audit Requirements",
+          content: "All security-critical changes must pass our audit requirements:",
+          code: `// Security audit checklist:
+1. Input validation
+2. Proper key management
+3. Secure random number generation
+4. Memory cleanup
+5. Error handling
+6. Rate limiting
+7. Audit logging`
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout title="Privacy Messenger Guide">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-accent-light mb-8">Privacy Messenger</h1>
+    
+    <div class="mb-12">
+      <h2 class="text-2xl font-semibold text-accent-light mb-4">Interactive Demo</h2>
+      <p class="text-accent-light/90 mb-6">
+        Try our interactive demo to see how end-to-end encryption works in practice.
+        Toggle between encrypted and decrypted views to understand the encryption process.
+      </p>
+      <MessengerDemo client:load />
+    </div>
+
+    <ProjectGuide
+      client:load
+      title={guideContent.title}
+      description={guideContent.description}
+      sections={guideContent.sections}
+    />
+  </div>
+</Layout>

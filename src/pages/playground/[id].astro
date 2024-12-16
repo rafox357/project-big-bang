@@ -1,0 +1,479 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const paths = categories.flatMap(category => 
+    category.projects.map(project => ({
+      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+      props: { project }
+    }))
+  );
+  return paths;
+}
+
+const { project } = Astro.props;
+
+// Example playground data
+const playgroundData = {
+  'privacy-os': {
+    examples: [
+      {
+        title: 'Basic Authentication',
+        description: 'Learn how to implement secure authentication',
+        difficulty: 'Beginner',
+        code: `
+import { PrivacyOS } from '@privacy-os/core';
+
+// Initialize PrivacyOS with secure defaults
+const privacy = new PrivacyOS({
+  encryption: 'aes-256-gcm',
+  storage: 'encrypted'
+});
+
+// Setup authentication
+async function setupAuth() {
+  await privacy.auth.configure({
+    method: 'password',
+    strength: 'high',
+    mfa: true
+  });
+  
+  // Add your authentication logic here
+}
+
+// Start the auth flow
+setupAuth().catch(console.error);
+`,
+        dependencies: ['@privacy-os/core: ^1.2.0'],
+        tests: [
+          {
+            name: 'Should configure auth correctly',
+            code: `
+test('auth configuration', async () => {
+  const config = await privacy.auth.getConfig();
+  expect(config.method).toBe('password');
+  expect(config.strength).toBe('high');
+  expect(config.mfa).toBe(true);
+});
+`
+          }
+        ]
+      },
+      {
+        title: 'Secure Data Storage',
+        description: 'Implement encrypted data storage',
+        difficulty: 'Intermediate',
+        code: `
+import { PrivacyOS, StorageEncryption } from '@privacy-os/core';
+
+// Initialize encrypted storage
+const storage = new StorageEncryption({
+  algorithm: 'aes-256-gcm',
+  keyDerivation: 'argon2id'
+});
+
+// Store sensitive data
+async function storeSecureData(data) {
+  const encrypted = await storage.encrypt(data);
+  return encrypted;
+}
+
+// Retrieve and decrypt data
+async function getSecureData(encryptedData) {
+  const decrypted = await storage.decrypt(encryptedData);
+  return decrypted;
+}
+`,
+        dependencies: ['@privacy-os/core: ^1.2.0'],
+        tests: [
+          {
+            name: 'Should encrypt and decrypt data',
+            code: `
+test('data encryption', async () => {
+  const data = { secret: 'sensitive-info' };
+  const encrypted = await storeSecureData(data);
+  const decrypted = await getSecureData(encrypted);
+  expect(decrypted).toEqual(data);
+});
+`
+          }
+        ]
+      }
+    ],
+    templates: [
+      {
+        name: 'Basic Project',
+        files: [
+          {
+            name: 'index.js',
+            content: `
+import { PrivacyOS } from '@privacy-os/core';
+
+// Your code here
+`
+          },
+          {
+            name: 'package.json',
+            content: `
+{
+  "name": "privacy-os-project",
+  "version": "1.0.0",
+  "dependencies": {
+    "@privacy-os/core": "^1.2.0"
+  }
+}
+`
+          }
+        ]
+      },
+      {
+        name: 'Full Stack App',
+        files: [
+          {
+            name: 'server.js',
+            content: `
+import express from 'express';
+import { PrivacyOS } from '@privacy-os/core';
+
+const app = express();
+const privacy = new PrivacyOS();
+
+app.use(express.json());
+
+// Your routes here
+`
+          },
+          {
+            name: 'client.js',
+            content: `
+import { PrivacyOSClient } from '@privacy-os/client';
+
+const client = new PrivacyOSClient();
+
+// Your client code here
+`
+          }
+        ]
+      }
+    ]
+  }
+};
+
+const data = playgroundData[Astro.params.id as string] || {
+  examples: [],
+  templates: []
+};
+---
+
+<Layout title={`Playground - ${project.title}`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-8">
+      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+        ← Back to Project
+      </a>
+    </nav>
+
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-4xl font-bold">Code Playground</h1>
+      <div class="flex gap-4">
+        <button class="action-btn primary">
+          New Playground
+        </button>
+        <button class="action-btn secondary">
+          Share Code
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <div class="card mb-4">
+          <h2>Examples</h2>
+          <div class="examples-list">
+            {data.examples.map(example => (
+              <button class="example-item">
+                <h3>{example.title}</h3>
+                <p>{example.description}</p>
+                <span class={`difficulty-badge ${example.difficulty.toLowerCase()}`}>
+                  {example.difficulty}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Templates</h2>
+          <div class="templates-list">
+            {data.templates.map(template => (
+              <button class="template-item">
+                <h3>{template.name}</h3>
+                <div class="files-preview">
+                  {template.files.map(file => (
+                    <span class="file-tag">{file.name}</span>
+                  ))}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="lg:col-span-3">
+        <div class="playground-container">
+          <!-- Editor Tabs -->
+          <div class="editor-tabs">
+            <button class="tab active">main.js</button>
+            <button class="tab">package.json</button>
+            <button class="tab">README.md</button>
+            <button class="new-tab">+</button>
+          </div>
+
+          <!-- Editor -->
+          <div class="editor-container">
+            <div class="editor-toolbar">
+              <div class="toolbar-left">
+                <button class="toolbar-btn">
+                  <span class="icon">⚙️</span>
+                  Settings
+                </button>
+                <button class="toolbar-btn">
+                  <span class="icon">📄</span>
+                  Format
+                </button>
+              </div>
+              <div class="toolbar-right">
+                <button class="toolbar-btn">
+                  <span class="icon">▶️</span>
+                  Run
+                </button>
+                <button class="toolbar-btn">
+                  <span class="icon">🧪</span>
+                  Test
+                </button>
+              </div>
+            </div>
+
+            <div class="editor-content">
+              <pre><code>{data.examples[0]?.code || '// Start coding here'}</code></pre>
+            </div>
+          </div>
+
+          <!-- Output Panel -->
+          <div class="output-panel">
+            <div class="panel-tabs">
+              <button class="panel-tab active">Console</button>
+              <button class="panel-tab">Terminal</button>
+              <button class="panel-tab">Tests</button>
+              <button class="panel-tab">Problems</button>
+            </div>
+            <div class="panel-content">
+              <div class="console-output">
+                <div class="log-line">
+                  <span class="log-time">12:00:00</span>
+                  <span class="log-type info">info</span>
+                  <span class="log-message">Playground initialized</span>
+                </div>
+                <div class="log-line">
+                  <span class="log-time">12:00:01</span>
+                  <span class="log-type success">success</span>
+                  <span class="log-message">Dependencies installed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dependencies Panel -->
+        <div class="dependencies-panel">
+          <h3>Dependencies</h3>
+          <div class="dependencies-list">
+            {data.examples[0]?.dependencies.map(dep => (
+              <div class="dependency-item">
+                <span class="package-name">{dep.split(':')[0]}</span>
+                <span class="package-version">{dep.split(':')[1]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .card {
+    @apply bg-accent/5 p-6 rounded-lg;
+  }
+
+  .card h2 {
+    @apply text-2xl font-bold mb-4;
+  }
+
+  .action-btn {
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-colors;
+  }
+
+  .action-btn.primary {
+    @apply bg-accent text-white hover:bg-accent-light;
+  }
+
+  .action-btn.secondary {
+    @apply bg-accent/20 text-accent-light hover:bg-accent/30;
+  }
+
+  .examples-list,
+  .templates-list {
+    @apply space-y-2;
+  }
+
+  .example-item,
+  .template-item {
+    @apply w-full text-left bg-accent/10 p-4 rounded-lg hover:bg-accent/20 transition-colors;
+  }
+
+  .example-item h3,
+  .template-item h3 {
+    @apply font-bold mb-1;
+  }
+
+  .difficulty-badge {
+    @apply inline-block px-2 py-1 rounded-full text-xs mt-2;
+  }
+
+  .difficulty-badge.beginner {
+    @apply bg-green-500/20 text-green-300;
+  }
+
+  .difficulty-badge.intermediate {
+    @apply bg-yellow-500/20 text-yellow-300;
+  }
+
+  .difficulty-badge.advanced {
+    @apply bg-red-500/20 text-red-300;
+  }
+
+  .files-preview {
+    @apply flex flex-wrap gap-2 mt-2;
+  }
+
+  .file-tag {
+    @apply bg-accent/20 px-2 py-1 rounded-full text-xs;
+  }
+
+  .playground-container {
+    @apply bg-accent/5 rounded-lg overflow-hidden;
+  }
+
+  .editor-tabs {
+    @apply flex items-center gap-1 p-2 bg-accent/10;
+  }
+
+  .tab {
+    @apply px-4 py-2 rounded-lg text-sm transition-colors;
+  }
+
+  .tab.active {
+    @apply bg-accent/20;
+  }
+
+  .new-tab {
+    @apply px-4 py-2 rounded-lg text-sm text-accent-light/70 hover:bg-accent/20 transition-colors;
+  }
+
+  .editor-toolbar {
+    @apply flex justify-between items-center p-2 bg-accent/10;
+  }
+
+  .toolbar-left,
+  .toolbar-right {
+    @apply flex items-center gap-2;
+  }
+
+  .toolbar-btn {
+    @apply flex items-center gap-2 px-3 py-1 rounded-lg text-sm hover:bg-accent/20 transition-colors;
+  }
+
+  .editor-content {
+    @apply p-4 bg-accent/5 min-h-[400px] font-mono text-sm;
+  }
+
+  .output-panel {
+    @apply border-t border-accent/20;
+  }
+
+  .panel-tabs {
+    @apply flex items-center gap-1 p-2 bg-accent/10;
+  }
+
+  .panel-tab {
+    @apply px-4 py-2 rounded-lg text-sm transition-colors;
+  }
+
+  .panel-tab.active {
+    @apply bg-accent/20;
+  }
+
+  .panel-content {
+    @apply p-4 max-h-[200px] overflow-auto;
+  }
+
+  .console-output {
+    @apply space-y-1 font-mono text-sm;
+  }
+
+  .log-line {
+    @apply flex items-center gap-2;
+  }
+
+  .log-time {
+    @apply text-accent-light/50;
+  }
+
+  .log-type {
+    @apply px-2 rounded-full text-xs;
+  }
+
+  .log-type.info {
+    @apply bg-blue-500/20 text-blue-300;
+  }
+
+  .log-type.success {
+    @apply bg-green-500/20 text-green-300;
+  }
+
+  .log-type.error {
+    @apply bg-red-500/20 text-red-300;
+  }
+
+  .dependencies-panel {
+    @apply mt-4 p-4 bg-accent/5 rounded-lg;
+  }
+
+  .dependencies-panel h3 {
+    @apply text-lg font-bold mb-2;
+  }
+
+  .dependencies-list {
+    @apply space-y-2;
+  }
+
+  .dependency-item {
+    @apply flex justify-between items-center bg-accent/10 p-2 rounded-lg;
+  }
+
+  .package-version {
+    @apply text-accent-light/70;
+  }
+</style>
+
+<script>
+  // Initialize Monaco Editor
+  // Note: This is a placeholder. You'll need to add the actual Monaco Editor integration
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing playground...');
+  });
+</script>

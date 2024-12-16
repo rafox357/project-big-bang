@@ -1,0 +1,50 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  lastUpdated?: string;
+}
+
+const { title, description, lastUpdated } = Astro.props;
+---
+
+<article class="doc-content max-w-3xl mx-auto py-12 px-6">
+  <header class="mb-12">
+    <h1 class="text-4xl font-bold text-white mb-4">{title}</h1>
+    {description && (
+      <p class="text-xl text-accent-light/80 mb-4">{description}</p>
+    )}
+    {lastUpdated && (
+      <div class="text-sm text-accent-light/60">
+        Last updated: {new Date(lastUpdated).toLocaleDateString()}
+      </div>
+    )}
+  </header>
+
+  <div class="prose prose-invert prose-accent max-w-none">
+    <slot />
+  </div>
+
+  <footer class="mt-12 pt-6 border-t border-accent border-opacity-20">
+    <div class="flex justify-between items-center">
+      <a href="#" class="text-accent hover:text-accent-light transition-colors">
+        Edit this page on GitHub
+      </a>
+      <div class="flex items-center space-x-4">
+        <button class="text-accent-light/60 hover:text-accent-light transition-colors">
+          Previous
+        </button>
+        <button class="text-accent-light/60 hover:text-accent-light transition-colors">
+          Next
+        </button>
+      </div>
+    </div>
+  </footer>
+</article>
+
+<style>
+  .prose-accent {
+    --tw-prose-links: rgb(var(--accent));
+    --tw-prose-invert-links: rgb(var(--accent));
+  }
+</style>

@@ -1,0 +1,57 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../data/projects';
+import MessengerDemo from '../../components/interactive/MessengerDemo';
+
+export async function getStaticPaths() {
+  const paths = categories.flatMap(category => 
+    category.projects.map(project => ({
+      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+      props: { project }
+    }))
+  );
+  return paths;
+}
+
+const { project } = Astro.props;
+
+// Demo components mapping
+const demoComponents = {
+  'secure-messaging-app': MessengerDemo,
+  // Add more demo components as they become available
+};
+
+const DemoComponent = demoComponents[Astro.params.id as string];
+---
+
+<Layout title={`${project.title} Demo`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-8">
+      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+        ← Back to Project
+      </a>
+    </nav>
+
+    <h1 class="text-4xl font-bold mb-8">{project.title} Demo</h1>
+
+    {DemoComponent ? (
+      <DemoComponent client:load />
+    ) : (
+      <div class="text-center py-12">
+        <p class="text-xl mb-4">Demo coming soon!</p>
+        <p class="text-accent-light/80">
+          We're working on an interactive demo for this project.
+          In the meantime, check out the project documentation or source code.
+        </p>
+        <div class="mt-8 space-x-4">
+          <a href={project.github} class="text-accent hover:text-accent-light">
+            View Source Code
+          </a>
+          <a href={`/docs/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+            Read Documentation
+          </a>
+        </div>
+      </div>
+    )}
+  </div>
+</Layout>

@@ -1,0 +1,258 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/contribute.css';
+
+const contributionAreas = [
+  {
+    title: '🧑‍💻 Development',
+    description: 'Help us build the future of digital privacy',
+    items: [
+      'Code contributions',
+      'Code review',
+      'Documentation',
+      'Bug reports',
+      'Feature implementation',
+      'Testing and QA',
+      'Performance optimization'
+    ],
+    link: '/contribute/dev'
+  },
+  {
+    title: '💡 Ideas & Feedback',
+    description: 'Share your thoughts and suggestions',
+    items: [
+      'Feature requests',
+      'UX feedback',
+      'Security analysis',
+      'Use cases',
+      'Design proposals',
+      'User research',
+      'Accessibility feedback'
+    ],
+    link: '/contribute/ideas'
+  },
+  {
+    title: '💰 Financial Support',
+    description: 'Help fund the development',
+    items: [
+      'One-time donations',
+      'Monthly sponsorship',
+      'Corporate sponsorship',
+      'Grant programs',
+      'Hardware donations',
+      'Infrastructure support',
+      'Developer funding'
+    ],
+    link: '/contribute/sponsor'
+  }
+];
+
+const fundingGoals = [
+  {
+    title: 'Security Audit',
+    current: 15000,
+    target: 20000,
+    description: 'Professional security audit of our core components'
+  },
+  {
+    title: 'Developer Tools',
+    current: 8000,
+    target: 10000,
+    description: 'Enhanced development and debugging tools'
+  },
+  {
+    title: 'Documentation Platform',
+    current: 5000,
+    target: 12000,
+    description: 'Interactive documentation and learning platform'
+  }
+];
+
+const contributionSteps = [
+  {
+    number: '01',
+    title: 'Choose Your Path',
+    description: 'Select how you want to contribute based on your skills and interests.'
+  },
+  {
+    number: '02',
+    title: 'Get Started',
+    description: 'Follow our detailed guides to set up your development environment.'
+  },
+  {
+    number: '03',
+    title: 'Join the Community',
+    description: 'Connect with other contributors in our Discord and GitHub discussions.'
+  },
+  {
+    number: '04',
+    title: 'Make an Impact',
+    description: 'Submit your contributions and help shape the future of privacy.'
+  }
+];
+---
+
+<Layout title="Contribute to the Project">
+  <main class="contribute">
+    <h1>Join Our Mission</h1>
+    
+    <section class="ways-to-contribute">
+      <h2>Ways to Contribute</h2>
+      <div class="contribute-grid">
+        {contributionAreas.map(area => (
+          <div class="contribute-card">
+            <h3>{area.title}</h3>
+            <p>{area.description}</p>
+            <ul>
+              {area.items.map(item => <li>{item}</li>)}
+            </ul>
+            <a href={area.link} class="contribute-btn">Get Started</a>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="funding">
+      <h2>Current Funding Goals</h2>
+      <div class="funding-progress">
+        {fundingGoals.map(goal => (
+          <div class="mb-8 last:mb-0">
+            <div class="flex justify-between mb-2">
+              <h3 class="text-accent-light font-semibold">{goal.title}</h3>
+              <span class="text-accent-light/90">${goal.current.toLocaleString()} / ${goal.target.toLocaleString()}</span>
+            </div>
+            <div class="funding-bar">
+              <div 
+                class="funding-bar-fill" 
+                style={`width: ${(goal.current / goal.target) * 100}%`}
+              />
+            </div>
+            <p class="text-accent-light/80 text-sm mt-2">{goal.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="contribution-steps">
+      <h2>How to Get Started</h2>
+      <div class="steps-grid">
+        {contributionSteps.map(step => (
+          <div class="step-card">
+            <div class="step-number">{step.number}</div>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-24 text-center">
+      <h2 class="mb-8">Ready to Make a Difference?</h2>
+      <div class="flex justify-center gap-4">
+        <a href="/contribute/dev" class="contribute-btn inline-block">Start Contributing</a>
+        <a href="/discord" class="contribute-btn inline-block">Join Discord</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .contribute {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: white;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .contribute-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+
+  .contribute-card {
+    background: rgba(var(--accent-dark), 0.2);
+    border: 1px solid rgba(var(--accent), 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+  }
+
+  .contribute-card h3 {
+    color: rgb(var(--accent-light));
+    margin-bottom: 1rem;
+  }
+
+  .contribute-card ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .contribute-btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: rgb(var(--accent));
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 1rem;
+  }
+
+  .funding {
+    margin-top: 4rem;
+  }
+
+  .funding-progress {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .funding-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(var(--accent-dark), 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+
+  .funding-bar-fill {
+    height: 100%;
+    background: rgb(var(--accent));
+    transition: width 0.3s;
+  }
+
+  .contribution-steps {
+    margin-top: 4rem;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+
+  .step-card {
+    background: rgba(var(--accent-dark), 0.2);
+    border: 1px solid rgba(var(--accent), 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+  }
+
+  .step-number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+</style>

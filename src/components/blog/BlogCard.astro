@@ -1,0 +1,74 @@
+---
+interface Props {
+  post: {
+    title: string;
+    excerpt: string;
+    date: string;
+    author: string;
+    slug: string;
+    category: string;
+  }
+}
+
+const { post } = Astro.props;
+---
+
+<article class="blog-card">
+  <div class="category">{post.category}</div>
+  <h3>{post.title}</h3>
+  <p>{post.excerpt}</p>
+  <div class="meta">
+    <span>{post.author}</span>
+    <span>{new Date(post.date).toLocaleDateString()}</span>
+  </div>
+  <a href={`/blog/${post.slug}`} class="read-more">Read More →</a>
+</article>
+
+<style>
+  .blog-card {
+    background: rgba(var(--accent-dark), 0.2);
+    border: 1px solid rgba(var(--accent), 0.3);
+    padding: 1.5rem;
+    border-radius: 8px;
+    transition: transform 0.2s;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .category {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(var(--accent), 0.2);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    color: rgb(var(--accent-light));
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: rgb(var(--accent-light));
+    margin-bottom: 1rem;
+  }
+
+  .meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: rgba(var(--accent-light), 0.8);
+    margin-bottom: 1rem;
+  }
+
+  .read-more {
+    color: rgb(var(--accent));
+    text-decoration: none;
+    font-weight: 500;
+  }
+</style>

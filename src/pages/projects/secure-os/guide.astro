@@ -1,0 +1,142 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ProjectGuide from '../../../components/guides/ProjectGuide';
+
+const guideContent = {
+  title: "Secure OS Development Guide",
+  description: "Learn how to contribute to our privacy-focused operating system project. This guide will walk you through the architecture, development setup, and best practices.",
+  sections: [
+    {
+      title: "Getting Started",
+      steps: [
+        {
+          title: "Development Environment Setup",
+          content: "First, ensure you have the required tools installed. You'll need Rust, QEMU for testing, and our custom build tools.",
+          code: `# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Install QEMU
+brew install qemu
+
+# Clone the repository
+git clone https://github.com/project-big-bang/secure-os.git
+cd secure-os
+
+# Install dependencies
+cargo install bootimage
+rustup component add llvm-tools-preview`
+        },
+        {
+          title: "Project Structure",
+          content: "The Secure OS project is organized into several key components:",
+          code: `secure-os/
+├── kernel/         # Core kernel implementation
+├── bootloader/     # Custom bootloader
+├── drivers/        # Hardware drivers
+├── security/       # Security modules
+├── userspace/      # User applications
+└── tools/          # Development tools`
+        },
+        {
+          title: "Building the OS",
+          content: "Build and test the operating system using our build scripts:",
+          code: `# Build the OS
+cargo build --target x86_64-unknown-none
+
+# Run in QEMU
+cargo run
+
+# Run tests
+cargo test`
+        }
+      ]
+    },
+    {
+      title: "Core Concepts",
+      steps: [
+        {
+          title: "Security Architecture",
+          content: "Our security architecture is built on these key principles: process isolation, secure boot, and encrypted storage.",
+          image: "/images/guides/security-architecture.png"
+        },
+        {
+          title: "Memory Management",
+          content: "We use a custom memory management system with hardware-enforced isolation between processes.",
+          code: `// Example of our page table implementation
+pub struct PageTable {
+    entries: [PageTableEntry; 512],
+}
+
+impl PageTable {
+    pub fn map(&mut self, page: Page, frame: PhysFrame, flags: PageTableFlags) {
+        // Implementation details
+    }
+}`
+        },
+        {
+          title: "Device Driver Framework",
+          content: "Learn about our modular driver framework that ensures secure device access.",
+          code: `// Example driver implementation
+pub trait Driver {
+    fn init(&mut self) -> Result<(), DriverError>;
+    fn read(&mut self, buffer: &mut [u8]) -> Result<usize, DriverError>;
+    fn write(&mut self, buffer: &[u8]) -> Result<usize, DriverError>;
+}`
+        }
+      ]
+    },
+    {
+      title: "Contributing",
+      steps: [
+        {
+          title: "Coding Standards",
+          content: "Follow our coding standards to ensure consistency and security:",
+          code: `// Example of proper error handling
+pub fn process_data(input: &[u8]) -> Result<Vec<u8>, ProcessError> {
+    validate_input(input)?;
+    let processed = transform_data(input)?;
+    Ok(processed)
+}`
+        },
+        {
+          title: "Testing Requirements",
+          content: "All contributions must include comprehensive tests:",
+          code: `#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_process_data() {
+        let input = &[1, 2, 3];
+        let result = process_data(input).unwrap();
+        assert_eq!(result, vec![2, 4, 6]);
+    }
+}`
+        },
+        {
+          title: "Submitting Changes",
+          content: "Learn how to submit your changes for review:",
+          code: `# Create a new branch
+git checkout -b feature/your-feature-name
+
+# Make your changes and commit
+git add .
+git commit -m "Description of your changes"
+
+# Push and create a pull request
+git push origin feature/your-feature-name`
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout title="Secure OS Guide">
+  <ProjectGuide
+    client:load
+    title={guideContent.title}
+    description={guideContent.description}
+    sections={guideContent.sections}
+  />
+</Layout>

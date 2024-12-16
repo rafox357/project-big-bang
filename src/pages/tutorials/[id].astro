@@ -1,0 +1,406 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const paths = categories.flatMap(category => 
+    category.projects.map(project => ({
+      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+      props: { project }
+    }))
+  );
+  return paths;
+}
+
+const { project } = Astro.props;
+
+// Example tutorials data
+const tutorialData = {
+  'privacy-os': {
+    courses: [
+      {
+        title: 'Getting Started with Privacy OS',
+        description: 'Learn the fundamentals of Privacy OS',
+        duration: '2 hours',
+        modules: [
+          {
+            title: 'Introduction to Privacy OS',
+            lessons: [
+              {
+                title: 'What is Privacy OS?',
+                duration: '10 min',
+                type: 'video',
+                completed: true
+              },
+              {
+                title: 'Core Concepts',
+                duration: '15 min',
+                type: 'interactive',
+                completed: true
+              }
+            ]
+          },
+          {
+            title: 'Basic Configuration',
+            lessons: [
+              {
+                title: 'Installation Guide',
+                duration: '20 min',
+                type: 'hands-on',
+                completed: false
+              },
+              {
+                title: 'Initial Setup',
+                duration: '25 min',
+                type: 'interactive',
+                completed: false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Advanced Security Features',
+        description: 'Deep dive into security features',
+        duration: '3 hours',
+        modules: [
+          {
+            title: 'Encryption Fundamentals',
+            lessons: [
+              {
+                title: 'Understanding Encryption',
+                duration: '30 min',
+                type: 'video',
+                completed: false
+              },
+              {
+                title: 'Implementing Encryption',
+                duration: '45 min',
+                type: 'hands-on',
+                completed: false
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    progress: {
+      completedLessons: 2,
+      totalLessons: 6,
+      timeSpent: '45 minutes',
+      lastAccessed: '2024-12-15'
+    },
+    achievements: [
+      {
+        name: 'First Steps',
+        description: 'Complete your first lesson',
+        earned: true,
+        date: '2024-12-14'
+      },
+      {
+        name: 'Quick Learner',
+        description: 'Complete 5 lessons in one day',
+        earned: false,
+        progress: 2
+      }
+    ],
+    resources: [
+      {
+        type: 'documentation',
+        title: 'API Reference',
+        url: '#'
+      },
+      {
+        type: 'github',
+        title: 'Example Repository',
+        url: '#'
+      }
+    ]
+  }
+};
+
+const data = tutorialData[Astro.params.id as string] || {
+  courses: [],
+  progress: {},
+  achievements: [],
+  resources: []
+};
+---
+
+<Layout title={`Tutorials - ${project.title}`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-8">
+      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+        ← Back to Project
+      </a>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-3">
+        <h1 class="text-4xl font-bold mb-8">Interactive Tutorials</h1>
+
+        <!-- Progress Overview -->
+        <div class="progress-overview mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="stat-card">
+              <h3>Course Progress</h3>
+              <div class="progress-bar">
+                <div 
+                  class="progress"
+                  style={`width: ${(data.progress.completedLessons / data.progress.totalLessons) * 100}%`}
+                />
+              </div>
+              <p class="progress-text">
+                {data.progress.completedLessons}/{data.progress.totalLessons} lessons completed
+              </p>
+            </div>
+            <div class="stat-card">
+              <h3>Time Spent</h3>
+              <p class="stat-value">{data.progress.timeSpent}</p>
+              <p class="text-sm text-accent-light/70">Last accessed: {data.progress.lastAccessed}</p>
+            </div>
+            <div class="stat-card">
+              <h3>Next Lesson</h3>
+              <p class="stat-value">Installation Guide</p>
+              <p class="text-sm text-accent-light/70">20 min remaining</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course List -->
+        <div class="courses-list space-y-6">
+          {data.courses.map(course => (
+            <div class="course-card">
+              <div class="course-header">
+                <div>
+                  <h2>{course.title}</h2>
+                  <p class="text-accent-light/70">{course.description}</p>
+                  <p class="text-sm">Duration: {course.duration}</p>
+                </div>
+                <button class="action-btn primary">Continue</button>
+              </div>
+
+              <div class="modules-list">
+                {course.modules.map(module => (
+                  <div class="module-card">
+                    <h3>{module.title}</h3>
+                    <div class="lessons-list">
+                      {module.lessons.map(lesson => (
+                        <div class="lesson-item">
+                          <div class="lesson-info">
+                            <span class={`lesson-icon ${lesson.type}`}>
+                              {lesson.type === 'video' ? '🎥' :
+                               lesson.type === 'interactive' ? '💻' : '🛠️'}
+                            </span>
+                            <div>
+                              <h4>{lesson.title}</h4>
+                              <p class="text-sm text-accent-light/70">
+                                {lesson.duration} • {lesson.type}
+                              </p>
+                            </div>
+                          </div>
+                          <div class="lesson-status">
+                            {lesson.completed ? (
+                              <span class="completed-badge">✓</span>
+                            ) : (
+                              <button class="start-btn">Start</button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <!-- Achievements -->
+        <div class="card mb-6">
+          <h2>Achievements</h2>
+          <div class="achievements-list">
+            {data.achievements.map(achievement => (
+              <div class={`achievement-card ${achievement.earned ? 'earned' : ''}`}>
+                <div class="achievement-icon">
+                  {achievement.earned ? '🏆' : '🔒'}
+                </div>
+                <div>
+                  <h3>{achievement.name}</h3>
+                  <p class="text-sm">{achievement.description}</p>
+                  {achievement.earned ? (
+                    <p class="text-xs text-accent-light/70">
+                      Earned on {achievement.date}
+                    </p>
+                  ) : (
+                    <div class="achievement-progress">
+                      <div class="progress-bar">
+                        <div 
+                          class="progress"
+                          style={`width: ${(achievement.progress / 5) * 100}%`}
+                        />
+                      </div>
+                      <span class="text-xs">{achievement.progress}/5</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Resources -->
+        <div class="card">
+          <h2>Resources</h2>
+          <div class="resources-list">
+            {data.resources.map(resource => (
+              <a href={resource.url} class="resource-link">
+                <span class="resource-icon">
+                  {resource.type === 'documentation' ? '📚' : '💻'}
+                </span>
+                {resource.title}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .stat-card {
+    @apply bg-accent/5 p-6 rounded-lg;
+  }
+
+  .stat-card h3 {
+    @apply text-sm text-accent-light/70 mb-2;
+  }
+
+  .stat-value {
+    @apply text-2xl font-bold;
+  }
+
+  .progress-bar {
+    @apply bg-accent/20 h-2 rounded-full overflow-hidden;
+  }
+
+  .progress {
+    @apply bg-accent h-full rounded-full transition-all;
+  }
+
+  .progress-text {
+    @apply text-sm mt-2;
+  }
+
+  .course-card {
+    @apply bg-accent/5 rounded-lg overflow-hidden;
+  }
+
+  .course-header {
+    @apply flex justify-between items-start p-6 border-b border-accent/20;
+  }
+
+  .course-header h2 {
+    @apply text-2xl font-bold mb-2;
+  }
+
+  .action-btn {
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-colors;
+  }
+
+  .action-btn.primary {
+    @apply bg-accent text-white hover:bg-accent-light;
+  }
+
+  .modules-list {
+    @apply p-6 space-y-6;
+  }
+
+  .module-card {
+    @apply space-y-4;
+  }
+
+  .module-card h3 {
+    @apply text-lg font-bold;
+  }
+
+  .lessons-list {
+    @apply space-y-2;
+  }
+
+  .lesson-item {
+    @apply flex justify-between items-center bg-accent/10 p-4 rounded-lg;
+  }
+
+  .lesson-info {
+    @apply flex items-center gap-4;
+  }
+
+  .lesson-icon {
+    @apply w-8 h-8 flex items-center justify-center bg-accent/20 rounded-lg;
+  }
+
+  .lesson-status {
+    @apply flex items-center gap-2;
+  }
+
+  .completed-badge {
+    @apply w-6 h-6 flex items-center justify-center bg-green-500/20 text-green-300 rounded-full;
+  }
+
+  .start-btn {
+    @apply px-3 py-1 bg-accent/20 text-accent-light rounded-lg hover:bg-accent/30 transition-colors;
+  }
+
+  .card {
+    @apply bg-accent/5 p-6 rounded-lg;
+  }
+
+  .card h2 {
+    @apply text-xl font-bold mb-4;
+  }
+
+  .achievements-list {
+    @apply space-y-4;
+  }
+
+  .achievement-card {
+    @apply flex items-start gap-4 bg-accent/10 p-4 rounded-lg;
+  }
+
+  .achievement-card.earned {
+    @apply bg-accent/20;
+  }
+
+  .achievement-icon {
+    @apply w-10 h-10 flex items-center justify-center bg-accent/20 rounded-lg;
+  }
+
+  .achievement-progress {
+    @apply mt-2 flex items-center gap-2;
+  }
+
+  .resources-list {
+    @apply space-y-2;
+  }
+
+  .resource-link {
+    @apply flex items-center gap-3 bg-accent/10 p-3 rounded-lg hover:bg-accent/20 transition-colors;
+  }
+
+  .resource-icon {
+    @apply w-6 h-6 flex items-center justify-center;
+  }
+</style>
+
+<script>
+  // Handle tutorial interactions
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing tutorials...');
+  });
+</script>

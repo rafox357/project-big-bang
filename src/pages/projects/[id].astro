@@ -1,0 +1,267 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getProjectById } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const paths = [];
+  const { categories } = await import('../../data/projects');
+  
+  categories.forEach(category => {
+    category.projects.forEach(project => {
+      paths.push({
+        params: { id: project.id },
+        props: { project }
+      });
+    });
+  });
+  
+  return paths;
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={project.title}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="breadcrumb mb-8">
+      <a href="/projects" class="text-accent hover:text-accent-light">Projects</a>
+      <span class="mx-2">/</span>
+      <span>{project.title}</span>
+    </nav>
+
+    <!-- Project Header -->
+    <div class="project-header mb-8">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-4xl font-bold mb-2">{project.title}</h1>
+          <p class="text-xl text-accent-light/70 mb-4">{project.description}</p>
+          <div class="flex gap-2 mb-4">
+            {project.tags.map(tag => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+        <div class="project-meta text-right">
+          <span class={`status-badge ${project.status}`}>{project.status}</span>
+          <p class="text-sm mt-2">Version {project.version}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <a href={`/deploy/${project.id}`} class="action-card">
+        <span class="icon">🚀</span>
+        <div>
+          <h3>Deploy</h3>
+          <p>Deploy and monitor</p>
+        </div>
+      </a>
+      <a href={`/analytics/${project.id}`} class="action-card">
+        <span class="icon">📊</span>
+        <div>
+          <h3>Analytics</h3>
+          <p>View insights</p>
+        </div>
+      </a>
+      <a href={`/playground/${project.id}`} class="action-card">
+        <span class="icon">💻</span>
+        <div>
+          <h3>Playground</h3>
+          <p>Try it out</p>
+        </div>
+      </a>
+      <a href={`/contribute/${project.id}`} class="action-card">
+        <span class="icon">🤝</span>
+        <div>
+          <h3>Contribute</h3>
+          <p>Join development</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Project Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2">
+        <div class="content-section">
+          <h2>Features</h2>
+          <ul class="feature-list">
+            {project.features.map(feature => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="content-section">
+          <h2>Getting Started</h2>
+          <div class="getting-started-cards">
+            <a href={`/tutorials/${project.id}`} class="getting-started-card">
+              <span class="icon">📚</span>
+              <div>
+                <h3>Tutorials</h3>
+                <p>Learn step by step</p>
+              </div>
+            </a>
+            <a href={project.documentation} class="getting-started-card">
+              <span class="icon">📖</span>
+              <div>
+                <h3>Documentation</h3>
+                <p>Read the docs</p>
+              </div>
+            </a>
+            <a href={project.demo} class="getting-started-card">
+              <span class="icon">🎮</span>
+              <div>
+                <h3>Live Demo</h3>
+                <p>Try it out</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <div class="sidebar-section">
+          <h2>Project Links</h2>
+          <div class="link-list">
+            <a href={project.github} class="link-item">
+              <span class="icon">📦</span>
+              GitHub Repository
+            </a>
+            <a href={`/manage/${project.id}`} class="link-item">
+              <span class="icon">⚙️</span>
+              Project Management
+            </a>
+            <a href={`/docs/${project.id}`} class="link-item">
+              <span class="icon">📚</span>
+              Documentation
+            </a>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h2>Community</h2>
+          <div class="link-list">
+            <a href={`/contribute/${project.id}`} class="link-item">
+              <span class="icon">🤝</span>
+              How to Contribute
+            </a>
+            <a href="#" class="link-item">
+              <span class="icon">💬</span>
+              Discussion Forum
+            </a>
+            <a href="#" class="link-item">
+              <span class="icon">🐛</span>
+              Report an Issue
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .breadcrumb {
+    @apply text-sm;
+  }
+
+  .tag {
+    @apply bg-accent/20 px-3 py-1 rounded-full text-sm;
+  }
+
+  .status-badge {
+    @apply px-3 py-1 rounded-full text-sm;
+  }
+
+  .status-badge.stable {
+    @apply bg-green-500/20 text-green-300;
+  }
+
+  .status-badge.beta {
+    @apply bg-yellow-500/20 text-yellow-300;
+  }
+
+  .status-badge.alpha {
+    @apply bg-red-500/20 text-red-300;
+  }
+
+  .action-card {
+    @apply flex items-center gap-4 bg-accent/5 p-4 rounded-lg hover:bg-accent/10 transition-colors;
+  }
+
+  .action-card .icon {
+    @apply text-2xl;
+  }
+
+  .action-card h3 {
+    @apply font-bold;
+  }
+
+  .action-card p {
+    @apply text-sm text-accent-light/70;
+  }
+
+  .content-section {
+    @apply bg-accent/5 p-6 rounded-lg mb-8;
+  }
+
+  .content-section h2 {
+    @apply text-2xl font-bold mb-4;
+  }
+
+  .feature-list {
+    @apply space-y-2;
+  }
+
+  .feature-list li {
+    @apply flex items-center gap-2;
+  }
+
+  .feature-list li:before {
+    content: "•";
+    @apply text-accent;
+  }
+
+  .getting-started-cards {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+  }
+
+  .getting-started-card {
+    @apply flex flex-col items-center gap-2 bg-accent/10 p-4 rounded-lg text-center hover:bg-accent/20 transition-colors;
+  }
+
+  .getting-started-card .icon {
+    @apply text-2xl;
+  }
+
+  .getting-started-card h3 {
+    @apply font-bold;
+  }
+
+  .getting-started-card p {
+    @apply text-sm text-accent-light/70;
+  }
+
+  .sidebar-section {
+    @apply bg-accent/5 p-6 rounded-lg mb-8;
+  }
+
+  .sidebar-section h2 {
+    @apply text-xl font-bold mb-4;
+  }
+
+  .link-list {
+    @apply space-y-2;
+  }
+
+  .link-item {
+    @apply flex items-center gap-3 p-2 rounded-lg hover:bg-accent/10 transition-colors;
+  }
+
+  .link-item .icon {
+    @apply text-lg;
+  }
+</style>

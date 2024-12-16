@@ -1,0 +1,26 @@
+---
+---
+
+<button
+  id="backToTop"
+  class="fixed bottom-8 right-8 bg-accent/90 text-white p-3 rounded-full shadow-lg opacity-0 transition-opacity duration-300 hover:bg-accent"
+  aria-label="Back to top"
+>
+  ↑
+</button>
+
+<script>
+  const button = document.getElementById('backToTop');
+  
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) {
+      button?.classList.remove('opacity-0');
+    } else {
+      button?.classList.add('opacity-0');
+    }
+  });
+
+  button?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>

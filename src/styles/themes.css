@@ -1,0 +1,55 @@
+/* Dark theme variables */
+:root {
+  --theme-transition: background-color 0.3s ease, color 0.3s ease;
+  --bg-primary: 19, 21, 26;
+  --bg-secondary: 26, 27, 38;
+  --text-primary: 248, 250, 252;
+  --text-secondary: 203, 213, 225;
+  --accent: 56, 189, 248;
+  --accent-light: 186, 230, 253;
+  --accent-dark: 26, 27, 38;
+  --border-color: 51, 65, 85;
+  --shadow-color: 0, 0, 0, 0.25;
+}
+
+/* Base styles using theme variables */
+body {
+  background-color: rgb(var(--bg-primary));
+  color: rgb(var(--text-primary));
+  transition: var(--theme-transition);
+}
+
+.bg-primary {
+  background-color: rgb(var(--bg-primary));
+  transition: var(--theme-transition);
+}
+
+.bg-secondary {
+  background-color: rgb(var(--bg-secondary));
+  transition: var(--theme-transition);
+}
+
+.text-primary {
+  color: rgb(var(--text-primary));
+  transition: var(--theme-transition);
+}
+
+.text-secondary {
+  color: rgb(var(--text-secondary));
+  transition: var(--theme-transition);
+}
+
+.border-theme {
+  border-color: rgb(var(--border-color));
+  transition: var(--theme-transition);
+}
+
+.shadow-theme {
+  box-shadow: 0 4px 6px -1px rgba(var(--shadow-color));
+  transition: var(--theme-transition);
+}
+
+/* Theme-specific overrides */
+.dark-theme .theme-invert {
+  filter: invert(1) hue-rotate(180deg);
+}

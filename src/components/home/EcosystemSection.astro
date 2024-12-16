@@ -1,0 +1,77 @@
+---
+import EcosystemVisualization from '../ecosystem/EcosystemVisualization';
+
+const ecosystemComponents = [
+  {
+    title: "Home Computer Hub",
+    description: "Central processing unit managing your entire digital ecosystem",
+    features: [
+      "Local AI Processing",
+      "Secure Data Storage",
+      "Device Management",
+      "Privacy Controls"
+    ]
+  },
+  {
+    title: "Smart Integration",
+    description: "Seamless connection with all your smart devices and systems",
+    features: [
+      "Device Auto-Discovery",
+      "Secure Protocols",
+      "Real-time Monitoring",
+      "Automated Responses"
+    ]
+  },
+  {
+    title: "Data Sovereignty",
+    description: "Complete control over your personal data and information",
+    features: [
+      "Local Storage",
+      "Encrypted Backups",
+      "Access Controls",
+      "Data Portability"
+    ]
+  },
+  {
+    title: "Security Framework",
+    description: "Multi-layered security protecting your digital life",
+    features: [
+      "Zero-Trust Architecture",
+      "Threat Detection",
+      "Secure Boot",
+      "Regular Audits"
+    ]
+  }
+];
+---
+
+<section class="ecosystem-section py-20 bg-gradient-to-b from-[#1a1b26] to-[#13151a]">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-[#00e5ff] to-[#ff3d00] text-transparent bg-clip-text">
+      Complete Digital Ecosystem
+    </h2>
+
+    <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
+      <div class="order-2 lg:order-1">
+        <EcosystemVisualization client:load />
+      </div>
+
+      <div class="order-1 lg:order-2 space-y-8">
+        {ecosystemComponents.map(component => (
+          <div class="bg-accent/10 border border-accent/20 rounded-lg p-6 hover:bg-accent/20 transition-colors">
+            <h3 class="text-xl font-semibold text-accent-light mb-2">{component.title}</h3>
+            <p class="text-accent-light/80 mb-4">{component.description}</p>
+            <ul class="grid grid-cols-2 gap-2">
+              {component.features.map(feature => (
+                <li class="flex items-center text-sm text-accent-light/70">
+                  <span class="mr-2" aria-hidden="true">→</span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

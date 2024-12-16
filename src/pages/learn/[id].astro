@@ -1,0 +1,322 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const paths = categories.flatMap(category => 
+    category.projects.map(project => ({
+      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+      props: { project }
+    }))
+  );
+  return paths;
+}
+
+const { project } = Astro.props;
+
+// Example learning content
+const learningContent = {
+  'privacy-os': {
+    tutorials: [
+      {
+        title: 'Getting Started with Privacy OS',
+        duration: '15 min',
+        level: 'Beginner',
+        topics: ['Installation', 'Basic Configuration', 'First Steps'],
+        videoUrl: '#',
+        interactive: true
+      },
+      {
+        title: 'Advanced Security Features',
+        duration: '30 min',
+        level: 'Advanced',
+        topics: ['Encryption', 'Security Policies', 'Access Control'],
+        videoUrl: '#',
+        interactive: true
+      }
+    ],
+    guides: [
+      {
+        title: 'Security Best Practices',
+        sections: [
+          'User Authentication',
+          'Data Encryption',
+          'Network Security',
+          'Update Management'
+        ],
+        lastUpdated: '2024-12-01'
+      },
+      {
+        title: 'Performance Optimization',
+        sections: [
+          'System Tuning',
+          'Resource Management',
+          'Cache Configuration',
+          'Service Optimization'
+        ],
+        lastUpdated: '2024-12-05'
+      }
+    ],
+    examples: [
+      {
+        title: 'Custom Security Policy',
+        description: 'Example of implementing a custom security policy',
+        difficulty: 'Intermediate',
+        codeUrl: '#',
+        preview: true
+      },
+      {
+        title: 'Secure Boot Configuration',
+        description: 'Step-by-step guide to configure secure boot',
+        difficulty: 'Advanced',
+        codeUrl: '#',
+        preview: true
+      }
+    ],
+    paths: [
+      {
+        name: 'Security Expert',
+        duration: '3 months',
+        modules: [
+          { name: 'Basic Security Concepts', status: 'available' },
+          { name: 'Advanced Encryption', status: 'available' },
+          { name: 'Security Auditing', status: 'coming-soon' }
+        ]
+      },
+      {
+        name: 'System Administrator',
+        duration: '2 months',
+        modules: [
+          { name: 'System Architecture', status: 'available' },
+          { name: 'Performance Tuning', status: 'available' },
+          { name: 'Troubleshooting', status: 'available' }
+        ]
+      }
+    ]
+  }
+};
+
+const content = learningContent[Astro.params.id as string] || {
+  tutorials: [],
+  guides: [],
+  examples: [],
+  paths: []
+};
+---
+
+<Layout title={`Learn ${project.title}`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-8">
+      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+        ← Back to Project
+      </a>
+    </nav>
+
+    <h1 class="text-4xl font-bold mb-8">Learning {project.title}</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Interactive Tutorials -->
+      <div class="card">
+        <h2>Interactive Tutorials</h2>
+        <div class="space-y-4">
+          {content.tutorials.map(tutorial => (
+            <div class="tutorial-card">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3>{tutorial.title}</h3>
+                  <p class="text-sm text-accent-light/70">
+                    {tutorial.duration} • {tutorial.level}
+                  </p>
+                </div>
+                {tutorial.interactive && (
+                  <span class="interactive-badge">Interactive</span>
+                )}
+              </div>
+              <div class="topics">
+                {tutorial.topics.map(topic => (
+                  <span class="topic-tag">{topic}</span>
+                ))}
+              </div>
+              <a href={tutorial.videoUrl} class="start-btn">
+                Start Tutorial
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Best Practice Guides -->
+      <div class="card">
+        <h2>Best Practice Guides</h2>
+        <div class="space-y-4">
+          {content.guides.map(guide => (
+            <div class="guide-card">
+              <h3>{guide.title}</h3>
+              <ul class="list-disc list-inside text-sm space-y-1">
+                {guide.sections.map(section => (
+                  <li>{section}</li>
+                ))}
+              </ul>
+              <p class="text-xs text-accent-light/50 mt-2">
+                Last updated: {guide.lastUpdated}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Example Projects -->
+      <div class="card">
+        <h2>Example Projects</h2>
+        <div class="space-y-4">
+          {content.examples.map(example => (
+            <div class="example-card">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3>{example.title}</h3>
+                  <p class="text-sm">{example.description}</p>
+                </div>
+                <span class={`difficulty ${example.difficulty.toLowerCase()}`}>
+                  {example.difficulty}
+                </span>
+              </div>
+              {example.preview && (
+                <div class="preview-box">
+                  <div class="preview-placeholder">
+                    Code Preview
+                  </div>
+                </div>
+              )}
+              <a href={example.codeUrl} class="view-code-btn">
+                View Code
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Learning Paths -->
+      <div class="card">
+        <h2>Learning Paths</h2>
+        <div class="space-y-6">
+          {content.paths.map(path => (
+            <div class="path-card">
+              <h3>{path.name}</h3>
+              <p class="text-sm">Duration: {path.duration}</p>
+              <div class="modules space-y-2 mt-4">
+                {path.modules.map(module => (
+                  <div class={`module ${module.status}`}>
+                    <span class="status-dot"></span>
+                    {module.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .card {
+    @apply bg-accent/5 p-6 rounded-lg;
+  }
+
+  .card h2 {
+    @apply text-2xl font-bold mb-4;
+  }
+
+  .tutorial-card {
+    @apply bg-accent/10 p-4 rounded-lg;
+  }
+
+  .tutorial-card h3 {
+    @apply text-lg font-bold;
+  }
+
+  .interactive-badge {
+    @apply bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-xs;
+  }
+
+  .topics {
+    @apply flex flex-wrap gap-2 mt-2;
+  }
+
+  .topic-tag {
+    @apply bg-accent/20 px-2 py-1 rounded-full text-xs;
+  }
+
+  .start-btn {
+    @apply block w-full text-center bg-accent text-white py-2 rounded-lg mt-4 hover:bg-accent-light transition-colors;
+  }
+
+  .guide-card {
+    @apply bg-accent/10 p-4 rounded-lg;
+  }
+
+  .guide-card h3 {
+    @apply text-lg font-bold mb-2;
+  }
+
+  .example-card {
+    @apply bg-accent/10 p-4 rounded-lg;
+  }
+
+  .example-card h3 {
+    @apply text-lg font-bold;
+  }
+
+  .difficulty {
+    @apply px-2 py-1 rounded-full text-xs;
+  }
+
+  .difficulty.beginner {
+    @apply bg-green-500/20 text-green-300;
+  }
+
+  .difficulty.intermediate {
+    @apply bg-yellow-500/20 text-yellow-300;
+  }
+
+  .difficulty.advanced {
+    @apply bg-red-500/20 text-red-300;
+  }
+
+  .preview-box {
+    @apply mt-4 bg-accent/20 rounded-lg p-4;
+  }
+
+  .preview-placeholder {
+    @apply text-center text-accent-light/50 py-8;
+  }
+
+  .view-code-btn {
+    @apply block w-full text-center bg-accent/20 text-accent-light py-2 rounded-lg mt-4 hover:bg-accent/30 transition-colors;
+  }
+
+  .path-card {
+    @apply bg-accent/10 p-4 rounded-lg;
+  }
+
+  .path-card h3 {
+    @apply text-lg font-bold;
+  }
+
+  .module {
+    @apply flex items-center gap-2 text-sm;
+  }
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .module.available .status-dot {
+    @apply bg-green-500;
+  }
+
+  .module.coming-soon .status-dot {
+    @apply bg-yellow-500;
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const sections = [
+  {
+    title: "Main Sections",
+    links: [
+      { label: "Home", href: "/" },
+      { label: "Vision", href: "/#vision" },
+      { label: "Projects", href: "/#projects" },
+      { label: "Documentation", href: "/docs" },
+      { label: "Contribute", href: "/contribute" }
+    ]
+  },
+  {
+    title: "Projects",
+    links: [
+      { label: "Web Solutions", href: "/projects?category=web" },
+      { label: "Applications", href: "/projects?category=apps" },
+      { label: "Secure OS", href: "/projects?category=os" },
+      { label: "Hardware", href: "/projects?category=hardware" }
+    ]
+  },
+  {
+    title: "Documentation",
+    links: [
+      { label: "Getting Started", href: "/docs/getting-started" },
+      { label: "Architecture", href: "/docs/architecture" },
+      { label: "Integration", href: "/docs/integration" },
+      { label: "API Reference", href: "/docs/api" }
+    ]
+  },
+  {
+    title: "Community",
+    links: [
+      { label: "Contribute", href: "/contribute" },
+      { label: "Blog", href: "/blog" },
+      { label: "Support", href: "/support" },
+      { label: "GitHub", href: "https://github.com/project-big-bang" }
+    ]
+  }
+];
+---
+
+<Layout title="Sitemap">
+  <main class="container mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold text-white mb-12">Sitemap</h1>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {sections.map(section => (
+        <div>
+          <h2 class="text-xl font-semibold text-accent-light mb-4">{section.title}</h2>
+          <ul class="space-y-2">
+            {section.links.map(link => (
+              <li>
+                <a 
+                  href={link.href}
+                  class="text-accent-light/80 hover:text-accent transition-colors"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </main>
+</Layout>

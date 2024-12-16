@@ -1,0 +1,52 @@
+---
+const sections = [
+  {
+    title: "Getting Started",
+    items: [
+      { label: "Introduction", href: "#introduction" },
+      { label: "Quick Start", href: "#quick-start" },
+      { label: "Installation", href: "#installation" }
+    ]
+  },
+  {
+    title: "Core Concepts",
+    items: [
+      { label: "Architecture", href: "#architecture" },
+      { label: "Security Model", href: "#security" },
+      { label: "Privacy", href: "#privacy" }
+    ]
+  },
+  {
+    title: "Development",
+    items: [
+      { label: "Setup Guide", href: "#setup" },
+      { label: "API Reference", href: "#api" },
+      { label: "Best Practices", href: "#best-practices" }
+    ]
+  }
+];
+---
+
+<nav class="sticky top-24 bg-background-dark p-6 rounded-lg border border-accent/20">
+  <h2 class="text-xl font-semibold text-accent-light mb-6">Documentation</h2>
+  
+  <div class="space-y-6">
+    {sections.map(section => (
+      <div>
+        <h3 class="text-sm font-medium text-accent-light/70 mb-2">{section.title}</h3>
+        <ul class="space-y-2">
+          {section.items.map(item => (
+            <li>
+              <a 
+                href={item.href}
+                class="text-accent-light hover:text-accent block transition-colors"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</nav>

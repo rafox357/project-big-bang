@@ -1,0 +1,117 @@
+---
+import { mainNavItems } from '../../config/navigation';
+---
+
+<div class="md:hidden">
+  <button
+    id="mobileMenuButton"
+    class="text-accent-light p-2"
+    aria-label="Open navigation menu"
+  >
+    <span class="sr-only">Open menu</span>
+    <span aria-hidden="true">☰</span>
+  </button>
+
+  <div
+    id="mobileMenu"
+    class="fixed inset-0 z-50 bg-[#13151a]/95 transform translate-x-full transition-transform duration-300"
+    hidden
+  >
+    <div class="h-full flex flex-col">
+      <div class="p-4 flex justify-between items-center border-b border-accent/20">
+        <span class="text-xl font-bold text-accent-light">Menu</span>
+        <button
+          id="closeMenuButton"
+          class="text-accent-light p-2"
+          aria-label="Close navigation menu"
+        >
+          <span aria-hidden="true">✕</span>
+        </button>
+      </div>
+
+      <nav class="flex-1 overflow-y-auto p-4">
+        {mainNavItems.map(item => (
+          <div class="mb-4">
+            {item.children ? (
+              <div class="space-y-2">
+                <button
+                  class="w-full text-left text-accent-light p-2 flex items-center justify-between"
+                  data-submenu-trigger
+                >
+                  <span class="flex items-center gap-2">
+                    {item.icon && <span aria-hidden="true">{item.icon}</span>}
+                    {item.label}
+                  </span>
+                  <span aria-hidden="true">+</span>
+                </button>
+                <div class="pl-4 space-y-1 hidden" data-submenu>
+                  {item.children.map(child => (
+                    <a
+                      href={child.href}
+                      class="block text-accent-light/80 p-2 hover:bg-accent/10 rounded"
+                    >
+                      {child.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <a
+                href={item.href}
+                class="block text-accent-light p-2 hover:bg-accent/10 rounded flex items-center gap-2"
+              >
+                {item.icon && <span aria-hidden="true">{item.icon}</span>}
+                {item.label}
+              </a>
+            )}
+          </div>
+        ))}
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script>
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileMenuButton = document.getElementById('mobileMenuButton');
+  const closeMenuButton = document.getElementById('closeMenuButton');
+  const submenuTriggers = document.querySelectorAll('[data-submenu-trigger]');
+
+  function toggleMenu(show: boolean) {
+    if (!mobileMenu || !mobileMenuButton) return;
+    
+    if (show) {
+      mobileMenu.hidden = false;
+      // Use setTimeout to ensure the element is visible before animating
+      setTimeout(() => {
+        mobileMenu.classList.remove('translate-x-full');
+      }, 0);
+      document.body.style.overflow = 'hidden';
+    } else {
+      mobileMenu.classList.add('translate-x-full');
+      // Wait for animation to complete before hiding
+      setTimeout(() => {
+        mobileMenu.hidden = true;
+        document.body.style.overflow = '';
+      }, 300);
+    }
+  }
+
+  mobileMenuButton?.addEventListener('click', () => toggleMenu(true));
+  closeMenuButton?.addEventListener('click', () => toggleMenu(false));
+
+  submenuTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const submenu = trigger.nextElementSibling;
+      const icon = trigger.querySelector('[aria-hidden]');
+      
+      if (submenu) {
+        const isHidden = submenu.classList.contains('hidden');
+        submenu.classList.toggle('hidden', !isHidden);
+        if (icon) {
+          icon.textContent = isHidden ? '−' : '+';
+        }
+      }
+    });
+  });
+</script>

@@ -1,0 +1,58 @@
+---
+---
+
+<section class="hero min-h-screen flex items-center justify-center relative overflow-hidden">
+  <div class="stars"></div>
+  <div class="hero-content text-center z-10 px-4">
+    <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-[#00e5ff] to-[#ff3d00] text-transparent bg-clip-text">
+      Project Big Bang
+    </h1>
+    <p class="text-xl md:text-2xl text-accent-light/80 mb-8 max-w-2xl mx-auto">
+      Creating a new digital universe where privacy, security, and control belong to you
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="#vision" class="primary-btn">
+        Explore Our Vision
+      </a>
+      <a href="/docs" class="secondary-btn">
+        Learn More
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: linear-gradient(45deg, #13151a, #1a1b26);
+  }
+
+  .stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: twinkle 4s ease-in-out infinite;
+    opacity: 0.3;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.5; }
+  }
+
+  .primary-btn {
+    @apply bg-accent text-white px-8 py-3 rounded-lg font-semibold 
+           hover:bg-accent/90 transition-colors;
+  }
+
+  .secondary-btn {
+    @apply border-2 border-accent text-accent-light px-8 py-3 rounded-lg 
+           font-semibold hover:bg-accent/10 transition-colors;
+  }
+</style>

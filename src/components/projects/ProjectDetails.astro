@@ -1,0 +1,159 @@
+---
+interface Props {
+  project: {
+    title: string;
+    description: string;
+    features: string[];
+    technologies: string[];
+    status: string;
+    demoUrl?: string;
+    githubUrl?: string;
+    documentation?: string;
+  }
+}
+
+const { project } = Astro.props;
+---
+
+<article class="project-details">
+  <header>
+    <h1>{project.title}</h1>
+    <p class="description">{project.description}</p>
+    <div class="status">Current Status: <span>{project.status}</span></div>
+  </header>
+
+  <section class="features">
+    <h2>Key Features</h2>
+    <ul>
+      {project.features.map(feature => <li>{feature}</li>)}
+    </ul>
+  </section>
+
+  <section class="tech-stack">
+    <h2>Technologies Used</h2>
+    <div class="tech-tags">
+      {project.technologies.map(tech => <span class="tag">{tech}</span>)}
+    </div>
+  </section>
+
+  <section class="links">
+    {project.demoUrl && (
+      <a href={project.demoUrl} class="link-btn demo">View Demo</a>
+    )}
+    {project.githubUrl && (
+      <a href={project.githubUrl} class="link-btn github">View Source</a>
+    )}
+    {project.documentation && (
+      <a href={project.documentation} class="link-btn docs">Documentation</a>
+    )}
+  </section>
+</article>
+
+<style>
+  .project-details {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: white;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .description {
+    font-size: 1.2rem;
+    color: rgb(var(--accent-light));
+    margin-bottom: 1rem;
+  }
+
+  .status {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(var(--accent), 0.2);
+    border-radius: 999px;
+  }
+
+  section {
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    color: rgb(var(--accent-light));
+    margin-bottom: 1rem;
+  }
+
+  .features ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .features li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .features li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: rgb(var(--accent));
+  }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    padding: 0.25rem 0.75rem;
+    background: rgba(var(--accent-dark), 0.3);
+    border: 1px solid rgba(var(--accent), 0.2);
+    border-radius: 999px;
+    font-size: 0.875rem;
+  }
+
+  .links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .link-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.2s;
+  }
+
+  .link-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .demo {
+    background: rgb(var(--accent));
+    color: white;
+  }
+
+  .github {
+    border: 2px solid rgb(var(--accent));
+    color: rgb(var(--accent-light));
+  }
+
+  .docs {
+    background: rgba(var(--accent), 0.2);
+    color: rgb(var(--accent-light));
+  }
+</style>

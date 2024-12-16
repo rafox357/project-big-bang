@@ -1,0 +1,18 @@
+---
+import type { Project } from '../../types';
+import { filterProjectsByCategory } from '../../utils/filters';
+import ProjectCard from './ProjectCard.astro';
+import ProjectFilter from './ProjectFilter.astro';
+
+const categories = [
+  { id: 'all', label: 'All Projects' },
+  { id: 'web', label: 'Web Solutions' },
+  { id: 'webapps', label: 'Web Applications' },
+  { id: 'apps', label: 'Mobile Apps' },
+  { id: 'software', label: 'Software' },
+  { id: 'services', label: 'Services' },
+  { id: 'os', label: 'Secure OS' },
+  { id: 'hardware', label: 'Hardware' }
+];
+
+// Rest of the file remains the same

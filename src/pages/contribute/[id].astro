@@ -1,0 +1,148 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const paths = categories.flatMap(category => 
+    category.projects.map(project => ({
+      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+      props: { project }
+    }))
+  );
+  return paths;
+}
+
+const { project } = Astro.props;
+
+// Example contribution guidelines - replace with actual data
+const guidelines = {
+  'privacy-os': {
+    requirements: [
+      'Knowledge of Linux kernel development',
+      'Understanding of security principles',
+      'Experience with C/C++',
+      'Familiarity with cryptography'
+    ],
+    setup: [
+      'Fork the repository',
+      'Clone your fork locally',
+      'Set up the development environment',
+      'Create a new branch for your feature'
+    ],
+    guidelines: [
+      'Follow the Linux kernel coding style',
+      'Write comprehensive tests',
+      'Document your changes',
+      'Sign your commits'
+    ],
+    areas: [
+      'Kernel security features',
+      'User interface improvements',
+      'Documentation',
+      'Testing and QA'
+    ]
+  },
+  'secure-messaging-app': {
+    requirements: [
+      'JavaScript/TypeScript experience',
+      'Knowledge of cryptography',
+      'Understanding of privacy principles',
+      'Experience with React'
+    ],
+    setup: [
+      'Fork the repository',
+      'Run npm install',
+      'Configure environment variables',
+      'Start the development server'
+    ],
+    guidelines: [
+      'Follow the project coding style',
+      'Write unit tests',
+      'Update documentation',
+      'Create meaningful commit messages'
+    ],
+    areas: [
+      'Encryption implementation',
+      'UI/UX improvements',
+      'Performance optimization',
+      'Security auditing'
+    ]
+  }
+};
+
+const projectGuidelines = guidelines[Astro.params.id as string];
+---
+
+<Layout title={`Contribute to ${project.title}`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-8">
+      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+        ← Back to Project
+      </a>
+    </nav>
+
+    <h1 class="text-4xl font-bold mb-8">Contributing to {project.title}</h1>
+
+    {projectGuidelines ? (
+      <div class="space-y-12">
+        <section>
+          <h2 class="text-2xl font-bold mb-4">Requirements</h2>
+          <ul class="list-disc list-inside space-y-2">
+            {projectGuidelines.requirements.map(req => (
+              <li class="text-accent-light/90">{req}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold mb-4">Development Setup</h2>
+          <ol class="list-decimal list-inside space-y-2">
+            {projectGuidelines.setup.map(step => (
+              <li class="text-accent-light/90">{step}</li>
+            ))}
+          </ol>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold mb-4">Contribution Guidelines</h2>
+          <ul class="list-disc list-inside space-y-2">
+            {projectGuidelines.guidelines.map(guideline => (
+              <li class="text-accent-light/90">{guideline}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold mb-4">Areas for Contribution</h2>
+          <ul class="list-disc list-inside space-y-2">
+            {projectGuidelines.areas.map(area => (
+              <li class="text-accent-light/90">{area}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="text-center py-8">
+          <a 
+            href={project.github}
+            class="inline-block bg-accent text-white px-6 py-3 rounded-lg hover:bg-accent-light transition-colors"
+          >
+            Start Contributing on GitHub
+          </a>
+        </section>
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <p class="text-xl mb-4">Contribution guidelines coming soon!</p>
+        <p class="text-accent-light/80">
+          We're working on detailed contribution guidelines.
+          In the meantime, check out our GitHub repository.
+        </p>
+        <div class="mt-8">
+          <a href={project.github} class="text-accent hover:text-accent-light">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    )}
+  </div>
+</Layout>

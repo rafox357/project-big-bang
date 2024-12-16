@@ -1,0 +1,63 @@
+---
+---
+<section id="ecosystem" class="ecosystem">
+  <h2>The Ecosystem</h2>
+  <div class="ecosystem-map">
+    <div class="map-node os">
+      <h3>Custom OS</h3>
+      <p>Secure by design</p>
+    </div>
+    <div class="map-node hardware">
+      <h3>Hardware</h3>
+      <p>Privacy-focused devices</p>
+    </div>
+    <div class="map-node apps">
+      <h3>Applications</h3>
+      <p>Integrated software suite</p>
+    </div>
+    <div class="map-node services">
+      <h3>Services</h3>
+      <p>Decentralized infrastructure</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ecosystem {
+    padding: 4rem 2rem;
+    background: #13151a;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: rgb(var(--accent-light));
+  }
+
+  .ecosystem-map {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .map-node {
+    padding: 2rem;
+    border-radius: 12px;
+    background: rgba(var(--accent-dark), 0.2);
+    border: 1px solid rgba(var(--accent), 0.3);
+    text-align: center;
+    transition: transform 0.3s;
+  }
+
+  .map-node:hover {
+    transform: translateY(-5px);
+  }
+
+  .map-node h3 {
+    color: rgb(var(--accent-light));
+    margin-bottom: 0.5rem;
+  }
+</style>

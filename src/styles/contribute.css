@@ -1,0 +1,87 @@
+.contribute {
+  @apply min-h-screen bg-gradient-to-b from-background to-background-dark py-24 px-4;
+}
+
+.contribute h1 {
+  @apply text-5xl font-bold text-center bg-gradient-to-r from-[#00e5ff] to-[#ff3d00] text-transparent bg-clip-text mb-16;
+}
+
+.contribute h2 {
+  @apply text-3xl font-bold text-accent-light mb-8 text-center;
+}
+
+.ways-to-contribute {
+  @apply container mx-auto mb-24;
+}
+
+.contribute-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+}
+
+.contribute-card {
+  @apply bg-background-dark p-8 rounded-lg border border-accent/20 hover:border-accent/40 transition-colors;
+}
+
+.contribute-card h3 {
+  @apply text-2xl font-semibold text-accent-light mb-4 flex items-center gap-2;
+}
+
+.contribute-card p {
+  @apply text-accent-light/90 mb-4;
+}
+
+.contribute-card ul {
+  @apply space-y-2 mb-6 text-accent-light/80;
+}
+
+.contribute-card li {
+  @apply flex items-center gap-2 before:content-['•'] before:text-accent;
+}
+
+.contribute-btn {
+  @apply inline-block px-6 py-2 bg-accent/10 hover:bg-accent/20 text-accent-light rounded-lg transition-colors text-center w-full;
+}
+
+.funding {
+  @apply container mx-auto;
+}
+
+.funding-progress {
+  @apply bg-background-dark p-8 rounded-lg border border-accent/20 max-w-2xl mx-auto;
+}
+
+.funding-bar {
+  @apply h-4 bg-accent/10 rounded-full overflow-hidden mb-4;
+}
+
+.funding-bar-fill {
+  @apply h-full bg-gradient-to-r from-[#00e5ff] to-[#ff3d00] rounded-full transition-all duration-1000;
+}
+
+.funding-stats {
+  @apply flex justify-between text-accent-light/90 text-sm;
+}
+
+.contribution-steps {
+  @apply container mx-auto mt-24;
+}
+
+.steps-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto;
+}
+
+.step-card {
+  @apply bg-background-dark p-8 rounded-lg border border-accent/20;
+}
+
+.step-number {
+  @apply w-10 h-10 rounded-full bg-accent/10 text-accent-light flex items-center justify-center font-bold mb-4;
+}
+
+.step-card h3 {
+  @apply text-xl font-semibold text-accent-light mb-4;
+}
+
+.step-card p {
+  @apply text-accent-light/90;
+}

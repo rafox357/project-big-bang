@@ -1,0 +1,106 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Documentation">
+  <main class="documentation">
+    <h1>Documentation</h1>
+    
+    <div class="doc-grid">
+      <section class="doc-section">
+        <h2>Getting Started</h2>
+        <ul>
+          <li><a href="/docs/quickstart">Quick Start Guide</a></li>
+          <li><a href="/docs/installation">Installation</a></li>
+          <li><a href="/docs/architecture">System Architecture</a></li>
+          <li><a href="/docs/security">Security Overview</a></li>
+        </ul>
+      </section>
+
+      <section class="doc-section">
+        <h2>Components</h2>
+        <ul>
+          <li><a href="/docs/os">Operating System</a></li>
+          <li><a href="/docs/hardware">Hardware Specifications</a></li>
+          <li><a href="/docs/apps">Applications</a></li>
+          <li><a href="/docs/services">Services</a></li>
+        </ul>
+      </section>
+
+      <section class="doc-section">
+        <h2>Development</h2>
+        <ul>
+          <li><a href="/docs/contributing">Contributing Guide</a></li>
+          <li><a href="/docs/coding-standards">Coding Standards</a></li>
+          <li><a href="/docs/testing">Testing Guidelines</a></li>
+          <li><a href="/docs/security-guidelines">Security Guidelines</a></li>
+        </ul>
+      </section>
+
+      <section class="doc-section">
+        <h2>API Reference</h2>
+        <ul>
+          <li><a href="/docs/api/core">Core API</a></li>
+          <li><a href="/docs/api/services">Services API</a></li>
+          <li><a href="/docs/api/integration">Integration API</a></li>
+          <li><a href="/docs/api/security">Security API</a></li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .documentation {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: white;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 3rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .doc-section {
+    background: rgba(var(--accent-dark), 0.2);
+    border: 1px solid rgba(var(--accent), 0.3);
+    padding: 2rem;
+    border-radius: 8px;
+  }
+
+  .doc-section h2 {
+    color: rgb(var(--accent-light));
+    margin-bottom: 1rem;
+  }
+
+  .doc-section ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .doc-section li {
+    margin: 0.5rem 0;
+  }
+
+  .doc-section a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .doc-section a:hover {
+    color: rgb(var(--accent-light));
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const paths = categories.flatMap(category => 
+    category.projects.map(project => ({
+      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+      props: { project }
+    }))
+  );
+  return paths;
+}
+
+const { project } = Astro.props;
+
+// Documentation content mapping
+const documentation = {
+  'privacy-os': {
+    overview: 'Privacy OS is a secure operating system designed with privacy at its core.',
+    setup: [
+      'Download the latest ISO from the releases page',
+      'Create a bootable USB using Etcher or Rufus',
+      'Boot from the USB and follow the installation wizard'
+    ],
+    features: [
+      'End-to-end encryption by default',
+      'Zero-knowledge architecture',
+      'Secure boot implementation',
+      'Privacy-focused app store'
+    ],
+    contributing: [
+      'Fork the repository',
+      'Create a feature branch',
+      'Submit a pull request'
+    ]
+  },
+  'secure-messaging-app': {
+    overview: 'End-to-end encrypted messaging platform for secure communication.',
+    setup: [
+      'Clone the repository',
+      'Install dependencies with npm install',
+      'Configure your environment variables',
+      'Run npm start to launch the development server'
+    ],
+    features: [
+      'End-to-end encryption',
+      'Forward secrecy',
+      'Self-destructing messages',
+      'Secure file sharing'
+    ],
+    contributing: [
+      'Check the issues page for tasks',
+      'Follow the coding guidelines',
+      'Write tests for new features'
+    ]
+  }
+  // Add more documentation as needed
+};
+
+const docs = documentation[Astro.params.id as string];
+---
+
+<Layout title={`${project.title} Documentation`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-8">
+      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+        ← Back to Project
+      </a>
+    </nav>
+
+    <h1 class="text-4xl font-bold mb-8">{project.title} Documentation</h1>
+
+    {docs ? (
+      <div class="space-y-8">
+        <section>
+          <h2 class="text-2xl font-bold mb-4">Overview</h2>
+          <p class="text-accent-light/90">{docs.overview}</p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold mb-4">Setup Guide</h2>
+          <ol class="list-decimal list-inside space-y-2">
+            {docs.setup.map(step => (
+              <li class="text-accent-light/90">{step}</li>
+            ))}
+          </ol>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold mb-4">Features</h2>
+          <ul class="list-disc list-inside space-y-2">
+            {docs.features.map(feature => (
+              <li class="text-accent-light/90">{feature}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold mb-4">Contributing</h2>
+          <ol class="list-decimal list-inside space-y-2">
+            {docs.contributing.map(step => (
+              <li class="text-accent-light/90">{step}</li>
+            ))}
+          </ol>
+        </section>
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <p class="text-xl mb-4">Documentation coming soon!</p>
+        <p class="text-accent-light/80">
+          We're working on comprehensive documentation for this project.
+          In the meantime, check out the README in our GitHub repository.
+        </p>
+        <div class="mt-8">
+          <a href={project.github} class="text-accent hover:text-accent-light">
+            View Source Code
+          </a>
+        </div>
+      </div>
+    )}
+  </div>
+</Layout>

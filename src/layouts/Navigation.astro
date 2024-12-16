@@ -1,0 +1,84 @@
+---
+import { NavItem } from '../types';
+
+const mainNav: NavItem[] = [
+  {
+    label: "Vision",
+    href: "/#vision",
+    icon: "🎯"
+  },
+  {
+    label: "Projects",
+    href: "/#projects",
+    icon: "🚀",
+    children: [
+      { label: "Web Solutions", href: "/projects?category=web" },
+      { label: "Applications", href: "/projects?category=apps" },
+      { label: "Secure OS", href: "/projects?category=os" },
+      { label: "Hardware", href: "/projects?category=hardware" }
+    ]
+  },
+  {
+    label: "Documentation",
+    href: "/docs",
+    icon: "📚"
+  },
+  {
+    label: "Contribute",
+    href: "/contribute",
+    icon: "🤝"
+  }
+];
+
+const breadcrumbsEnabled = true;
+---
+
+<nav class="fixed top-0 w-full bg-[#13151a]/90 backdrop-blur-sm border-b border-accent/20 z-50">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="text-2xl font-bold bg-gradient-to-r from-[#00e5ff] to-[#ff3d00] text-transparent bg-clip-text">
+        Project Big Bang
+      </a>
+
+      <div class="hidden md:flex items-center space-x-8">
+        {mainNav.map(item => (
+          <div class="relative group">
+            <a 
+              href={item.href}
+              class="text-accent-light hover:text-accent transition-colors flex items-center gap-2"
+            >
+              <span>{item.icon}</span>
+              {item.label}
+            </a>
+            
+            {item.children && (
+              <div class="absolute top-full left-0 mt-2 w-48 bg-[#1a1b26] border border-accent/20 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                {item.children.map(child => (
+                  <a 
+                    href={child.href}
+                    class="block px-4 py-2 text-accent-light hover:bg-accent/10 transition-colors"
+                  >
+                    {child.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <button class="md:hidden text-accent-light">
+        <span class="sr-only">Open menu</span>
+        ☰
+      </button>
+    </div>
+  </div>
+
+  {breadcrumbsEnabled && (
+    <div class="container mx-auto px-4 py-2 text-sm text-accent-light/60">
+      <slot name="breadcrumbs" />
+    </div>
+  )}
+</nav>
+
+<div class="h-16"></div> <!-- Spacer for fixed nav -->

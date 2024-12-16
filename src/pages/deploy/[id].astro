@@ -1,0 +1,427 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const paths = categories.flatMap(category => 
+    category.projects.map(project => ({
+      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+      props: { project }
+    }))
+  );
+  return paths;
+}
+
+const { project } = Astro.props;
+
+// Example deployment data
+const deploymentData = {
+  'privacy-os': {
+    environments: [
+      {
+        name: 'Production',
+        status: 'healthy',
+        lastDeploy: '2024-12-15T18:30:00',
+        version: '1.2.0',
+        url: 'https://privacy-os.example.com',
+        metrics: {
+          uptime: '99.99%',
+          responseTime: '120ms',
+          errorRate: '0.01%'
+        }
+      },
+      {
+        name: 'Staging',
+        status: 'deploying',
+        lastDeploy: '2024-12-16T02:15:00',
+        version: '1.2.1-beta',
+        url: 'https://staging.privacy-os.example.com',
+        metrics: {
+          uptime: '99.95%',
+          responseTime: '150ms',
+          errorRate: '0.05%'
+        }
+      }
+    ],
+    services: [
+      {
+        name: 'Authentication API',
+        status: 'operational',
+        type: 'API Gateway',
+        region: 'us-west-2',
+        scaling: {
+          min: 2,
+          max: 10,
+          current: 4
+        }
+      },
+      {
+        name: 'Database Cluster',
+        status: 'operational',
+        type: 'PostgreSQL',
+        region: 'us-west-2',
+        scaling: {
+          min: 1,
+          max: 3,
+          current: 1
+        }
+      }
+    ],
+    deployHistory: [
+      {
+        version: '1.2.0',
+        date: '2024-12-15T18:30:00',
+        status: 'successful',
+        duration: '245s',
+        changes: ['Security patch', 'Performance improvements'],
+        deployer: 'CI/CD Pipeline'
+      },
+      {
+        version: '1.1.9',
+        date: '2024-12-10T14:20:00',
+        status: 'successful',
+        duration: '230s',
+        changes: ['Bug fixes', 'UI updates'],
+        deployer: 'John Doe'
+      }
+    ],
+    monitoring: {
+      alerts: [
+        {
+          severity: 'warning',
+          message: 'High CPU usage detected',
+          timestamp: '2024-12-16T02:30:00',
+          status: 'active'
+        }
+      ],
+      metrics: {
+        cpu: {
+          current: 65,
+          threshold: 80,
+          trend: 'increasing'
+        },
+        memory: {
+          current: 45,
+          threshold: 75,
+          trend: 'stable'
+        },
+        storage: {
+          current: 55,
+          threshold: 85,
+          trend: 'stable'
+        }
+      }
+    }
+  }
+};
+
+const data = deploymentData[Astro.params.id as string] || {
+  environments: [],
+  services: [],
+  deployHistory: [],
+  monitoring: { alerts: [], metrics: {} }
+};
+---
+
+<Layout title={`Deploy ${project.title}`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-8">
+      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+        ← Back to Project
+      </a>
+    </nav>
+
+    <h1 class="text-4xl font-bold mb-8">Deploy & Monitor {project.title}</h1>
+
+    <!-- Environments Overview -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      {data.environments.map(env => (
+        <div class="env-card">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h2 class="text-2xl font-bold">{env.name}</h2>
+              <p class="text-sm text-accent-light/70">
+                Version {env.version}
+              </p>
+            </div>
+            <span class={`status-badge ${env.status}`}>
+              {env.status}
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-4 mb-4">
+            <div class="metric-box">
+              <span class="label">Uptime</span>
+              <span class="value">{env.metrics.uptime}</span>
+            </div>
+            <div class="metric-box">
+              <span class="label">Response Time</span>
+              <span class="value">{env.metrics.responseTime}</span>
+            </div>
+            <div class="metric-box">
+              <span class="label">Error Rate</span>
+              <span class="value">{env.metrics.errorRate}</span>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <a href={env.url} class="action-btn primary">
+              View Environment
+            </a>
+            <button class="action-btn secondary">
+              Trigger Deploy
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Services -->
+      <div class="card">
+        <h2>Cloud Services</h2>
+        <div class="space-y-4">
+          {data.services.map(service => (
+            <div class="service-card">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3>{service.name}</h3>
+                  <p class="text-sm text-accent-light/70">
+                    {service.type} • {service.region}
+                  </p>
+                </div>
+                <span class={`status-badge ${service.status}`}>
+                  {service.status}
+                </span>
+              </div>
+              <div class="scaling-info">
+                <span>Scaling: {service.scaling.current}/{service.scaling.max}</span>
+                <div class="scaling-bar">
+                  <div 
+                    class="scaling-progress" 
+                    style={`width: ${(service.scaling.current / service.scaling.max) * 100}%`}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Deployment History -->
+      <div class="card">
+        <h2>Deployment History</h2>
+        <div class="space-y-4">
+          {data.deployHistory.map(deploy => (
+            <div class="deploy-card">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3>v{deploy.version}</h3>
+                  <p class="text-sm text-accent-light/70">
+                    {deploy.date} • {deploy.duration}
+                  </p>
+                </div>
+                <span class={`status-badge ${deploy.status}`}>
+                  {deploy.status}
+                </span>
+              </div>
+              <ul class="list-disc list-inside text-sm mt-2">
+                {deploy.changes.map(change => (
+                  <li>{change}</li>
+                ))}
+              </ul>
+              <p class="text-xs text-accent-light/50 mt-2">
+                Deployed by: {deploy.deployer}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Monitoring -->
+      <div class="card">
+        <h2>System Monitoring</h2>
+        
+        <!-- Alerts -->
+        <div class="alerts-section mb-6">
+          <h3 class="text-lg font-bold mb-2">Active Alerts</h3>
+          {data.monitoring.alerts.map(alert => (
+            <div class={`alert-card ${alert.severity}`}>
+              <span class="alert-icon">⚠️</span>
+              <div>
+                <p class="font-bold">{alert.message}</p>
+                <p class="text-sm text-accent-light/70">
+                  {alert.timestamp}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Resource Metrics -->
+        <div class="metrics-section">
+          <h3 class="text-lg font-bold mb-2">Resource Usage</h3>
+          {Object.entries(data.monitoring.metrics).map(([key, metric]) => (
+            <div class="metric-card">
+              <div class="flex justify-between mb-1">
+                <span class="capitalize">{key}</span>
+                <span class={`trend ${metric.trend}`}>
+                  {metric.trend === 'increasing' ? '↗' : 
+                   metric.trend === 'decreasing' ? '↘' : '→'}
+                </span>
+              </div>
+              <div class="metric-bar">
+                <div 
+                  class={`metric-progress ${
+                    metric.current > metric.threshold ? 'warning' : ''
+                  }`}
+                  style={`width: ${metric.current}%`}
+                />
+                <div 
+                  class="threshold-marker"
+                  style={`left: ${metric.threshold}%`}
+                />
+              </div>
+              <div class="flex justify-between text-xs">
+                <span>{metric.current}%</span>
+                <span class="text-accent-light/50">
+                  Threshold: {metric.threshold}%
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .env-card {
+    @apply bg-accent/5 p-6 rounded-lg;
+  }
+
+  .status-badge {
+    @apply px-2 py-1 rounded-full text-xs;
+  }
+
+  .status-badge.healthy {
+    @apply bg-green-500/20 text-green-300;
+  }
+
+  .status-badge.deploying {
+    @apply bg-yellow-500/20 text-yellow-300;
+  }
+
+  .status-badge.operational {
+    @apply bg-green-500/20 text-green-300;
+  }
+
+  .status-badge.warning {
+    @apply bg-yellow-500/20 text-yellow-300;
+  }
+
+  .status-badge.error {
+    @apply bg-red-500/20 text-red-300;
+  }
+
+  .metric-box {
+    @apply bg-accent/10 p-3 rounded-lg text-center;
+  }
+
+  .metric-box .label {
+    @apply block text-xs text-accent-light/70;
+  }
+
+  .metric-box .value {
+    @apply block text-lg font-bold;
+  }
+
+  .action-btn {
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-colors;
+  }
+
+  .action-btn.primary {
+    @apply bg-accent text-white hover:bg-accent-light;
+  }
+
+  .action-btn.secondary {
+    @apply bg-accent/20 text-accent-light hover:bg-accent/30;
+  }
+
+  .card {
+    @apply bg-accent/5 p-6 rounded-lg;
+  }
+
+  .card h2 {
+    @apply text-2xl font-bold mb-4;
+  }
+
+  .service-card {
+    @apply bg-accent/10 p-4 rounded-lg;
+  }
+
+  .scaling-info {
+    @apply mt-2 text-sm;
+  }
+
+  .scaling-bar {
+    @apply mt-1 bg-accent/20 h-2 rounded-full overflow-hidden;
+  }
+
+  .scaling-progress {
+    @apply bg-accent h-full rounded-full;
+  }
+
+  .deploy-card {
+    @apply bg-accent/10 p-4 rounded-lg;
+  }
+
+  .alert-card {
+    @apply flex items-start gap-3 bg-accent/10 p-4 rounded-lg mb-2;
+  }
+
+  .alert-card.warning {
+    @apply bg-yellow-500/20;
+  }
+
+  .alert-card.critical {
+    @apply bg-red-500/20;
+  }
+
+  .metric-card {
+    @apply mb-4;
+  }
+
+  .metric-bar {
+    @apply relative bg-accent/20 h-2 rounded-full overflow-hidden;
+  }
+
+  .metric-progress {
+    @apply bg-accent h-full rounded-full;
+  }
+
+  .metric-progress.warning {
+    @apply bg-yellow-500;
+  }
+
+  .threshold-marker {
+    @apply absolute top-0 h-full w-0.5 bg-red-500;
+  }
+
+  .trend {
+    @apply font-mono;
+  }
+
+  .trend.increasing {
+    @apply text-red-400;
+  }
+
+  .trend.decreasing {
+    @apply text-green-400;
+  }
+
+  .trend.stable {
+    @apply text-accent-light;
+  }
+</style>

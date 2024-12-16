@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DocumentationHero from '../components/documentation/DocumentationHero.astro';
+import DocumentationNav from '../components/documentation/DocumentationNav.astro';
+import DocumentationContent from '../components/documentation/DocumentationContent.astro';
+
+---
+
+<Layout title="Documentation">
+  <div class="min-h-screen bg-gradient-to-b from-background to-background-dark">
+    <DocumentationHero />
+    
+    <div class="container mx-auto px-4 py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <DocumentationNav />
+        <div class="lg:col-span-3">
+          <DocumentationContent />
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

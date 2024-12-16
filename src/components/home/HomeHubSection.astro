@@ -1,0 +1,31 @@
+---
+import HomeHubFeatures from './HomeHubFeatures.astro';
+import InteractiveDemo from '../interactive/InteractiveDemo';
+---
+
+<section class="home-hub-section py-20 bg-gradient-to-b from-[#1a1b26] to-[#13151a]">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-[#00e5ff] to-[#ff3d00] text-transparent bg-clip-text">
+      The Home Hub
+    </h2>
+    <p class="text-xl text-center text-accent-light/80 mb-12 max-w-2xl mx-auto">
+      A revolutionary central computer system that puts you in control of your digital life
+    </p>
+
+    <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
+      <div class="order-2 lg:order-1">
+        <InteractiveDemo client:load />
+      </div>
+
+      <div class="order-1 lg:order-2">
+        <HomeHubFeatures />
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a href="/docs/home-hub" class="inline-block bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-colors">
+        Learn More About Home Hub
+      </a>
+    </div>
+  </div>
+</section>

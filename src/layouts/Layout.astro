@@ -1,0 +1,65 @@
+---
+import Navigation from '../components/navigation/Navigation.astro';
+import MobileNavigation from '../components/navigation/MobileNavigation.astro';
+import BackToTop from '../components/common/BackToTop.astro';
+import AccessibilityWrapper from '../components/accessibility/AccessibilityWrapper.astro';
+import { ViewTransitions } from 'astro:transitions';
+import '../styles/global.css';
+import '../styles/themes.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Project X - Privacy-focused Projects">
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} - Project X</title>
+    <ViewTransitions />
+  </head>
+  <body>
+    <AccessibilityWrapper>
+      <div id="app">
+        <a href="#main-content" class="skip-to-content">Skip to main content</a>
+        <Navigation>
+          <MobileNavigation slot="mobile-nav" />
+        </Navigation>
+        <main id="main-content">
+          <slot />
+        </main>
+        <BackToTop />
+      </div>
+    </AccessibilityWrapper>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --accent: 136, 58, 234;
+    --accent-light: 224, 204, 250;
+    --accent-dark: 49, 10, 101;
+    --accent-gradient: linear-gradient(
+      45deg,
+      rgb(var(--accent)),
+      rgb(var(--accent-light)) 30%,
+      white 60%
+    );
+  }
+
+  .skip-to-content {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4
+           bg-accent text-white px-4 py-2 rounded-lg z-50;
+  }
+
+  #app {
+    @apply min-h-screen bg-gradient-to-b from-gray-900 to-gray-800;
+  }
+</style>

@@ -1,0 +1,36 @@
+/* High contrast theme */
+.high-contrast {
+  --accent: 0, 255, 255;
+  --accent-light: 255, 255, 255;
+  --accent-dark: 0, 0, 0;
+}
+
+/* Reduced motion */
+.reduce-motion * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Accessibility button styles */
+.a11y-btn {
+  @apply bg-accent/90 text-white p-2 rounded-lg shadow-lg 
+         hover:bg-accent focus:outline-none focus:ring-2 
+         focus:ring-accent focus:ring-offset-2 focus:ring-offset-[#13151a]
+         disabled:opacity-50 disabled:cursor-not-allowed
+         transition-colors;
+}
+
+/* Focus styles */
+[role="button"],
+button,
+a {
+  @apply focus:outline-none focus:ring-2 focus:ring-accent 
+         focus:ring-offset-2 focus:ring-offset-[#13151a];
+}
+
+/* Skip to main content */
+.skip-to-content {
+  @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4
+         focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-white
+         focus:rounded-lg focus:shadow-lg;
+}

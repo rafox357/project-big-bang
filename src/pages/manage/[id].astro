@@ -1,0 +1,274 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const paths = categories.flatMap(category => 
+    category.projects.map(project => ({
+      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+      props: { project }
+    }))
+  );
+  return paths;
+}
+
+const { project } = Astro.props;
+
+// Example project management data
+const projectData = {
+  'privacy-os': {
+    versions: [
+      {
+        version: '1.2.0',
+        releaseDate: '2024-12-01',
+        changes: ['Security enhancements', 'Performance improvements'],
+        status: 'stable'
+      },
+      {
+        version: '1.1.0',
+        releaseDate: '2024-11-01',
+        changes: ['UI updates', 'Bug fixes'],
+        status: 'archived'
+      }
+    ],
+    roadmap: [
+      {
+        milestone: 'Enhanced Security',
+        dueDate: '2025-Q1',
+        status: 'in-progress',
+        tasks: [
+          { name: 'Implement 2FA', status: 'completed' },
+          { name: 'Security audit', status: 'in-progress' },
+          { name: 'Vulnerability scanning', status: 'planned' }
+        ]
+      },
+      {
+        milestone: 'Performance Optimization',
+        dueDate: '2025-Q2',
+        status: 'planned',
+        tasks: [
+          { name: 'Code optimization', status: 'planned' },
+          { name: 'Cache implementation', status: 'planned' }
+        ]
+      }
+    ],
+    issues: [
+      {
+        id: 'BUG-101',
+        title: 'Memory leak in encryption module',
+        status: 'open',
+        priority: 'high',
+        assignee: 'John Doe',
+        created: '2024-12-01'
+      },
+      {
+        id: 'FEATURE-102',
+        title: 'Add support for hardware keys',
+        status: 'in-progress',
+        priority: 'medium',
+        assignee: 'Jane Smith',
+        created: '2024-12-05'
+      }
+    ],
+    metrics: {
+      downloads: {
+        total: 15000,
+        lastMonth: 2500,
+        trend: '+15%'
+      },
+      contributors: {
+        total: 45,
+        active: 12,
+        newLastMonth: 3
+      },
+      issues: {
+        open: 23,
+        closed: 156,
+        averageResolutionTime: '3.5 days'
+      }
+    }
+  }
+};
+
+const data = projectData[Astro.params.id as string] || {
+  versions: [],
+  roadmap: [],
+  issues: [],
+  metrics: { downloads: {}, contributors: {}, issues: {} }
+};
+---
+
+<Layout title={`Manage ${project.title}`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-8">
+      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+        ← Back to Project
+      </a>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Project Overview -->
+      <div class="lg:col-span-3">
+        <h1 class="text-4xl font-bold mb-4">{project.title}</h1>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="stat-card">
+            <h3>Downloads</h3>
+            <p class="text-2xl">{data.metrics.downloads.total?.toLocaleString() || 0}</p>
+            <p class="text-sm">Last month: {data.metrics.downloads.lastMonth?.toLocaleString() || 0}</p>
+          </div>
+          <div class="stat-card">
+            <h3>Contributors</h3>
+            <p class="text-2xl">{data.metrics.contributors.total || 0}</p>
+            <p class="text-sm">Active: {data.metrics.contributors.active || 0}</p>
+          </div>
+          <div class="stat-card">
+            <h3>Open Issues</h3>
+            <p class="text-2xl">{data.metrics.issues.open || 0}</p>
+            <p class="text-sm">Closed: {data.metrics.issues.closed || 0}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Version Control -->
+      <div class="card">
+        <h2>Version Control</h2>
+        <div class="space-y-4">
+          {data.versions.map(version => (
+            <div class="version-item">
+              <h3>v{version.version}</h3>
+              <p class="text-sm">{version.releaseDate}</p>
+              <ul class="list-disc list-inside text-sm mt-2">
+                {version.changes.map(change => <li>{change}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Roadmap -->
+      <div class="card">
+        <h2>Project Roadmap</h2>
+        <div class="space-y-6">
+          {data.roadmap.map(milestone => (
+            <div class="milestone">
+              <h3>{milestone.milestone}</h3>
+              <p class="text-sm">Due: {milestone.dueDate}</p>
+              <div class="tasks space-y-2 mt-2">
+                {milestone.tasks.map(task => (
+                  <div class={`task ${task.status}`}>
+                    <span class="status-dot"></span>
+                    {task.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Issue Tracking -->
+      <div class="card">
+        <h2>Issues & Features</h2>
+        <div class="space-y-4">
+          {data.issues.map(issue => (
+            <div class={`issue-card ${issue.priority}`}>
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="issue-id">{issue.id}</span>
+                  <h4>{issue.title}</h4>
+                </div>
+                <span class={`status-badge ${issue.status}`}>{issue.status}</span>
+              </div>
+              <div class="issue-meta">
+                <span>Assignee: {issue.assignee}</span>
+                <span>Created: {issue.created}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .stat-card {
+    @apply bg-accent/10 p-4 rounded-lg;
+  }
+
+  .card {
+    @apply bg-accent/5 p-6 rounded-lg;
+  }
+
+  .card h2 {
+    @apply text-2xl font-bold mb-4;
+  }
+
+  .version-item {
+    @apply border-l-2 border-accent/30 pl-4;
+  }
+
+  .milestone {
+    @apply border-l-2 border-accent/30 pl-4;
+  }
+
+  .task {
+    @apply flex items-center gap-2 text-sm;
+  }
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .task.completed .status-dot {
+    @apply bg-green-500;
+  }
+
+  .task.in-progress .status-dot {
+    @apply bg-yellow-500;
+  }
+
+  .task.planned .status-dot {
+    @apply bg-blue-500;
+  }
+
+  .issue-card {
+    @apply bg-accent/10 p-4 rounded-lg;
+  }
+
+  .issue-id {
+    @apply text-sm text-accent-light/70;
+  }
+
+  .status-badge {
+    @apply px-2 py-1 rounded-full text-xs;
+  }
+
+  .status-badge.open {
+    @apply bg-red-500/20 text-red-300;
+  }
+
+  .status-badge.in-progress {
+    @apply bg-yellow-500/20 text-yellow-300;
+  }
+
+  .status-badge.completed {
+    @apply bg-green-500/20 text-green-300;
+  }
+
+  .issue-meta {
+    @apply flex gap-4 mt-2 text-sm text-accent-light/70;
+  }
+
+  .issue-card.high {
+    @apply border-l-4 border-red-500;
+  }
+
+  .issue-card.medium {
+    @apply border-l-4 border-yellow-500;
+  }
+
+  .issue-card.low {
+    @apply border-l-4 border-green-500;
+  }
+</style>

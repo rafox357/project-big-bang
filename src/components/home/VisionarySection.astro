@@ -1,0 +1,54 @@
+---
+import EcosystemVisualization from '../ecosystem/EcosystemVisualization';
+
+const visionPoints = [
+  {
+    title: "Digital Sovereignty",
+    description: "Take control of your digital life with a complete ecosystem that puts you in charge.",
+    icon: "👑"
+  },
+  {
+    title: "Home Computing Revolution",
+    description: "Transform your home into an intelligent hub with local AI processing and automation.",
+    icon: "🏠"
+  },
+  {
+    title: "Privacy by Design",
+    description: "Built from the ground up with privacy and security as core principles.",
+    icon: "🔐"
+  },
+  {
+    title: "Open Innovation",
+    description: "Community-driven development ensuring transparency and continuous improvement.",
+    icon: "🌟"
+  }
+];
+---
+
+<section id="vision" class="visionary-section py-20 bg-gradient-to-b from-[#13151a] to-[#1a1b26]">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-[#00e5ff] to-[#ff3d00] text-transparent bg-clip-text">
+      Our Vision
+    </h2>
+    
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="space-y-6">
+        {visionPoints.map(point => (
+          <div class="bg-accent/10 border border-accent/20 rounded-lg p-6 hover:transform hover:-translate-y-1 transition-all">
+            <div class="flex items-start gap-4">
+              <span class="text-3xl" aria-hidden="true">{point.icon}</span>
+              <div>
+                <h3 class="text-xl font-semibold text-accent-light mb-2">{point.title}</h3>
+                <p class="text-accent-light/80">{point.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div class="relative">
+        <EcosystemVisualization client:load />
+      </div>
+    </div>
+  </div>
+</section>

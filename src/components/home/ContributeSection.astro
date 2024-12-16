@@ -1,0 +1,59 @@
+---
+const areas = [
+  {
+    title: "Development",
+    icon: "🧑‍💻",
+    description: "Join our development team and help build the future of home computing.",
+    skills: ["OS Development", "Security", "UI/UX", "Hardware Design"]
+  },
+  {
+    title: "Research",
+    icon: "🔬",
+    description: "Contribute to research in AI, security, and home automation.",
+    skills: ["AI/ML", "Security Research", "Hardware Architecture", "UX Research"]
+  },
+  {
+    title: "Community",
+    icon: "🤝",
+    description: "Help grow and support our community of developers and users.",
+    skills: ["Documentation", "Support", "Translation", "Advocacy"]
+  },
+  {
+    title: "Innovation",
+    icon: "💡",
+    description: "Share ideas and help shape the future of the project.",
+    skills: ["Feature Ideas", "Use Cases", "Integration Concepts", "Design Thinking"]
+  }
+];
+---
+
+<section class="contribute-section py-20 bg-gradient-to-b from-[#13151a] to-[#1a1b26]">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-[#00e5ff] to-[#ff3d00] text-transparent bg-clip-text">
+      Join the Revolution
+    </h2>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {areas.map(area => (
+        <div class="bg-opacity-20 bg-accent p-6 rounded-lg border border-accent border-opacity-30 hover:transform hover:-translate-y-2 transition-transform">
+          <div class="text-4xl mb-4">{area.icon}</div>
+          <h3 class="text-xl font-semibold text-accent-light mb-2">{area.title}</h3>
+          <p class="text-accent-light/80 mb-4">{area.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {area.skills.map(skill => (
+              <span class="text-sm bg-accent bg-opacity-10 text-accent-light px-2 py-1 rounded">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div class="text-center mt-12">
+      <a href="/contribute" class="inline-block bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-colors">
+        Start Contributing
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,485 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const paths = categories.flatMap(category => 
+    category.projects.map(project => ({
+      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+      props: { project }
+    }))
+  );
+  return paths;
+}
+
+const { project } = Astro.props;
+
+// Example analytics data
+const analyticsData = {
+  'privacy-os': {
+    overview: {
+      totalDownloads: 152430,
+      activeInstalls: 89245,
+      githubStars: 3200,
+      contributors: 45
+    },
+    trends: {
+      downloads: [
+        { date: '2024-12-15', count: 1245 },
+        { date: '2024-12-14', count: 1190 },
+        { date: '2024-12-13', count: 1350 },
+        { date: '2024-12-12', count: 1280 },
+        { date: '2024-12-11', count: 1175 }
+      ],
+      issues: [
+        { date: '2024-12-15', opened: 5, closed: 7 },
+        { date: '2024-12-14', opened: 3, closed: 4 },
+        { date: '2024-12-13', opened: 6, closed: 5 },
+        { date: '2024-12-12', opened: 4, closed: 6 },
+        { date: '2024-12-11', opened: 3, closed: 3 }
+      ]
+    },
+    usage: {
+      versions: [
+        { version: '1.2.0', percentage: 45 },
+        { version: '1.1.9', percentage: 30 },
+        { version: '1.1.8', percentage: 15 },
+        { version: 'Others', percentage: 10 }
+      ],
+      platforms: [
+        { name: 'Linux', percentage: 60 },
+        { name: 'MacOS', percentage: 25 },
+        { name: 'Windows', percentage: 15 }
+      ]
+    },
+    performance: {
+      responseTime: {
+        p50: 120,
+        p90: 180,
+        p99: 250
+      },
+      errorRates: {
+        total: 0.05,
+        byEndpoint: [
+          { endpoint: '/api/auth', rate: 0.02 },
+          { endpoint: '/api/data', rate: 0.07 },
+          { endpoint: '/api/config', rate: 0.04 }
+        ]
+      }
+    },
+    community: {
+      topContributors: [
+        { name: 'John Doe', contributions: 156, avatar: '#' },
+        { name: 'Jane Smith', contributions: 143, avatar: '#' },
+        { name: 'Bob Wilson', contributions: 98, avatar: '#' }
+      ],
+      recentActivity: [
+        {
+          type: 'pull-request',
+          title: 'Add new security feature',
+          author: 'John Doe',
+          status: 'merged',
+          date: '2024-12-15'
+        },
+        {
+          type: 'issue',
+          title: 'Bug in authentication flow',
+          author: 'Jane Smith',
+          status: 'open',
+          date: '2024-12-14'
+        }
+      ]
+    }
+  }
+};
+
+const data = analyticsData[Astro.params.id as string] || {
+  overview: {},
+  trends: { downloads: [], issues: [] },
+  usage: { versions: [], platforms: [] },
+  performance: { responseTime: {}, errorRates: { byEndpoint: [] } },
+  community: { topContributors: [], recentActivity: [] }
+};
+---
+
+<Layout title={`Analytics - ${project.title}`}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-8">
+      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+        ← Back to Project
+      </a>
+    </nav>
+
+    <h1 class="text-4xl font-bold mb-8">Analytics Dashboard</h1>
+
+    <!-- Overview Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="stat-card">
+        <h3>Total Downloads</h3>
+        <p class="stat-value">{data.overview.totalDownloads?.toLocaleString()}</p>
+        <div class="stat-trend positive">↗ 12.5% vs last month</div>
+      </div>
+      <div class="stat-card">
+        <h3>Active Installs</h3>
+        <p class="stat-value">{data.overview.activeInstalls?.toLocaleString()}</p>
+        <div class="stat-trend positive">↗ 8.3% vs last month</div>
+      </div>
+      <div class="stat-card">
+        <h3>GitHub Stars</h3>
+        <p class="stat-value">{data.overview.githubStars?.toLocaleString()}</p>
+        <div class="stat-trend positive">↗ 5.2% vs last month</div>
+      </div>
+      <div class="stat-card">
+        <h3>Contributors</h3>
+        <p class="stat-value">{data.overview.contributors}</p>
+        <div class="stat-trend positive">↗ 2 new this month</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Download Trends -->
+      <div class="card">
+        <h2>Download Trends</h2>
+        <div class="chart-container">
+          <div class="chart-placeholder">
+            <div class="chart-bars">
+              {data.trends.downloads.map(day => (
+                <div 
+                  class="chart-bar"
+                  style={`height: ${(day.count / 1500) * 100}%`}
+                  title={`${day.date}: ${day.count} downloads`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issue Activity -->
+      <div class="card">
+        <h2>Issue Activity</h2>
+        <div class="chart-container">
+          <div class="chart-placeholder">
+            <div class="chart-lines">
+              {data.trends.issues.map(day => (
+                <div class="chart-line">
+                  <div 
+                    class="line opened"
+                    style={`height: ${(day.opened / 10) * 100}%`}
+                  />
+                  <div 
+                    class="line closed"
+                    style={`height: ${(day.closed / 10) * 100}%`}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Version Distribution -->
+      <div class="card">
+        <h2>Version Distribution</h2>
+        <div class="pie-chart-container">
+          {data.usage.versions.map(version => (
+            <div class="distribution-row">
+              <span class="version-label">v{version.version}</span>
+              <div class="distribution-bar">
+                <div 
+                  class="distribution-progress"
+                  style={`width: ${version.percentage}%`}
+                />
+              </div>
+              <span class="percentage">{version.percentage}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Platform Distribution -->
+      <div class="card">
+        <h2>Platform Distribution</h2>
+        <div class="pie-chart-container">
+          {data.usage.platforms.map(platform => (
+            <div class="distribution-row">
+              <span class="platform-label">{platform.name}</span>
+              <div class="distribution-bar">
+                <div 
+                  class="distribution-progress"
+                  style={`width: ${platform.percentage}%`}
+                />
+              </div>
+              <span class="percentage">{platform.percentage}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Performance Metrics -->
+      <div class="card">
+        <h2>Performance Metrics</h2>
+        <div class="performance-section">
+          <h3>Response Times</h3>
+          <div class="response-times">
+            <div class="metric-row">
+              <span>P50</span>
+              <div class="metric-bar">
+                <div 
+                  class="metric-progress"
+                  style={`width: ${(data.performance.responseTime.p50 / 300) * 100}%`}
+                />
+              </div>
+              <span>{data.performance.responseTime.p50}ms</span>
+            </div>
+            <div class="metric-row">
+              <span>P90</span>
+              <div class="metric-bar">
+                <div 
+                  class="metric-progress"
+                  style={`width: ${(data.performance.responseTime.p90 / 300) * 100}%`}
+                />
+              </div>
+              <span>{data.performance.responseTime.p90}ms</span>
+            </div>
+            <div class="metric-row">
+              <span>P99</span>
+              <div class="metric-bar">
+                <div 
+                  class="metric-progress"
+                  style={`width: ${(data.performance.responseTime.p99 / 300) * 100}%`}
+                />
+              </div>
+              <span>{data.performance.responseTime.p99}ms</span>
+            </div>
+          </div>
+        </div>
+        <div class="performance-section">
+          <h3>Error Rates by Endpoint</h3>
+          <div class="error-rates">
+            {data.performance.errorRates.byEndpoint.map(endpoint => (
+              <div class="metric-row">
+                <span>{endpoint.endpoint}</span>
+                <div class="metric-bar">
+                  <div 
+                    class={`metric-progress ${endpoint.rate > 0.05 ? 'warning' : ''}`}
+                    style={`width: ${endpoint.rate * 1000}%`}
+                  />
+                </div>
+                <span>{(endpoint.rate * 100).toFixed(2)}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Community Activity -->
+      <div class="card">
+        <h2>Community Activity</h2>
+        <div class="community-section">
+          <h3>Top Contributors</h3>
+          <div class="contributors-list">
+            {data.community.topContributors.map(contributor => (
+              <div class="contributor-card">
+                <img 
+                  src={contributor.avatar} 
+                  alt={contributor.name}
+                  class="avatar"
+                />
+                <div>
+                  <h4>{contributor.name}</h4>
+                  <p>{contributor.contributions} contributions</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="community-section">
+          <h3>Recent Activity</h3>
+          <div class="activity-list">
+            {data.community.recentActivity.map(activity => (
+              <div class={`activity-card ${activity.type}`}>
+                <span class={`activity-icon ${activity.type}`}>
+                  {activity.type === 'pull-request' ? '⇄' : '◉'}
+                </span>
+                <div>
+                  <h4>{activity.title}</h4>
+                  <p>by {activity.author} • {activity.date}</p>
+                </div>
+                <span class={`status-badge ${activity.status}`}>
+                  {activity.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .stat-card {
+    @apply bg-accent/5 p-6 rounded-lg;
+  }
+
+  .stat-card h3 {
+    @apply text-sm text-accent-light/70;
+  }
+
+  .stat-value {
+    @apply text-3xl font-bold mt-2;
+  }
+
+  .stat-trend {
+    @apply text-sm mt-2;
+  }
+
+  .stat-trend.positive {
+    @apply text-green-400;
+  }
+
+  .stat-trend.negative {
+    @apply text-red-400;
+  }
+
+  .card {
+    @apply bg-accent/5 p-6 rounded-lg;
+  }
+
+  .card h2 {
+    @apply text-2xl font-bold mb-4;
+  }
+
+  .chart-container {
+    @apply h-64;
+  }
+
+  .chart-placeholder {
+    @apply h-full bg-accent/10 rounded-lg p-4;
+  }
+
+  .chart-bars {
+    @apply h-full flex items-end justify-between gap-2;
+  }
+
+  .chart-bar {
+    @apply w-8 bg-accent rounded-t-lg transition-all hover:bg-accent-light;
+  }
+
+  .chart-lines {
+    @apply h-full flex items-end justify-between gap-2;
+  }
+
+  .chart-line {
+    @apply flex gap-1;
+  }
+
+  .line {
+    @apply w-4 rounded-t-lg;
+  }
+
+  .line.opened {
+    @apply bg-red-400;
+  }
+
+  .line.closed {
+    @apply bg-green-400;
+  }
+
+  .distribution-row {
+    @apply flex items-center gap-4 mb-2;
+  }
+
+  .distribution-bar {
+    @apply flex-1 bg-accent/20 h-2 rounded-full overflow-hidden;
+  }
+
+  .distribution-progress {
+    @apply h-full bg-accent rounded-full;
+  }
+
+  .percentage {
+    @apply w-12 text-right text-sm;
+  }
+
+  .performance-section {
+    @apply mb-6;
+  }
+
+  .performance-section h3 {
+    @apply text-lg font-bold mb-2;
+  }
+
+  .metric-row {
+    @apply flex items-center gap-4 mb-2;
+  }
+
+  .metric-bar {
+    @apply flex-1 bg-accent/20 h-2 rounded-full overflow-hidden;
+  }
+
+  .metric-progress {
+    @apply h-full bg-accent rounded-full;
+  }
+
+  .metric-progress.warning {
+    @apply bg-yellow-500;
+  }
+
+  .community-section {
+    @apply mb-6;
+  }
+
+  .community-section h3 {
+    @apply text-lg font-bold mb-2;
+  }
+
+  .contributors-list {
+    @apply space-y-2;
+  }
+
+  .contributor-card {
+    @apply flex items-center gap-4 bg-accent/10 p-3 rounded-lg;
+  }
+
+  .avatar {
+    @apply w-10 h-10 rounded-full bg-accent/20;
+  }
+
+  .activity-list {
+    @apply space-y-2;
+  }
+
+  .activity-card {
+    @apply flex items-center gap-4 bg-accent/10 p-3 rounded-lg;
+  }
+
+  .activity-icon {
+    @apply w-8 h-8 flex items-center justify-center rounded-full bg-accent/20;
+  }
+
+  .activity-icon.pull-request {
+    @apply bg-purple-500/20 text-purple-300;
+  }
+
+  .activity-icon.issue {
+    @apply bg-blue-500/20 text-blue-300;
+  }
+
+  .status-badge {
+    @apply px-2 py-1 rounded-full text-xs;
+  }
+
+  .status-badge.open {
+    @apply bg-green-500/20 text-green-300;
+  }
+
+  .status-badge.merged {
+    @apply bg-purple-500/20 text-purple-300;
+  }
+
+  .status-badge.closed {
+    @apply bg-red-500/20 text-red-300;
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/home/HeroSection.astro';
+import VisionarySection from '../components/home/VisionarySection.astro';
+import HomeHubSection from '../components/home/HomeHubSection.astro';
+import EcosystemSection from '../components/home/EcosystemSection.astro';
+import InnovationSection from '../components/home/InnovationSection.astro';
+import RoadmapSection from '../components/home/RoadmapSection.astro';
+import ProjectShowcase from '../components/projects/ProjectShowcase.astro';
+import ContributeSection from '../components/home/ContributeSection.astro';
+import { HomeEnvironment } from '../components/visualization/HomeEnvironment';
+import { SystemStatus } from '../components/visualization/SystemStatus';
+import { NetworkTraffic } from '../components/visualization/NetworkTraffic';
+---
+
+<Layout title="Project Big Bang - Digital Sovereignty">
+  <main class="overflow-hidden">
+    <HeroSection />
+    
+    <VisionarySection />
+
+    <section class="relative bg-gradient-to-b from-[#1a1b26] to-[#13151a] py-20">
+      <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-12">Interactive Home Environment</h2>
+        <div class="bg-secondary/30 backdrop-blur-sm rounded-xl shadow-lg p-6">
+          <HomeEnvironment client:visible />
+        </div>
+      </div>
+    </section>
+
+    <HomeHubSection />
+    
+    <section class="relative bg-gradient-to-b from-[#13151a] to-[#1a1b26] py-20">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-secondary/30 backdrop-blur-sm rounded-xl shadow-lg p-6">
+            <h3 class="text-2xl font-bold mb-6">System Status</h3>
+            <SystemStatus client:visible />
+          </div>
+          <div class="bg-secondary/30 backdrop-blur-sm rounded-xl shadow-lg p-6">
+            <h3 class="text-2xl font-bold mb-6">Network Activity</h3>
+            <NetworkTraffic client:visible />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <EcosystemSection />
+    
+    <InnovationSection />
+    
+    <RoadmapSection />
+    
+    <ProjectShowcase />
+    
+    <ContributeSection />
+  </main>
+</Layout>
+
+<style>
+  /* Add smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Optimize performance with hardware acceleration */
+  main {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Add intersection observer for performance */
+  section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 5000px;
+  }
+</style>
