@@ -27,11 +27,14 @@ jobs:
 
       # Step 4: Build the Astro project
       - name: Build project
-        run: npm run build
+        run: |
+          npm run build
+          touch dist/.nojekyll
 
       # Step 5: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist  # Folder where Astro outputs the static files
+          publish_dir: ./dist
+          enable_jekyll: false
