@@ -4,6 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
+        background: {
+          DEFAULT: '#000000',
+          dark: '#111111'
+        },
         accent: {
           DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
           light: 'rgb(var(--accent-light) / <alpha-value>)',
