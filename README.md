@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# project-big-bang
-=======
 # Project Big Bang 🚀
 
 A revolutionary initiative to transform home computing and digital sovereignty through a complete ecosystem of secure, private, and interconnected technologies.
@@ -166,4 +163,3 @@ If you believe in digital sovereignty and want to support this project:
 ---
 
 Built with ❤️ for digital sovereignty
->>>>>>> d0002b9 (Initial commit)
