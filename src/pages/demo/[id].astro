@@ -1,14 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { categories } from '../../data/projects';
-import { demoComponents } from '../../data/demoComponents';
+import { demoComponentIds } from '../../data/demoComponents.tsx';
+import MessengerDemo from '../../components/interactive/MessengerDemo';
 
 export async function getStaticPaths() {
   const paths = categories.flatMap(category => 
     category.projects
       .filter(project => {
         const projectId = project.title.toLowerCase().replace(/\s+/g, '-');
-        return projectId in demoComponents;
+        return demoComponentIds.includes(projectId as any);
       })
       .map(project => ({
         params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
@@ -19,22 +20,24 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const DemoComponent = demoComponents[Astro.params.id as string];
+const id = Astro.params.id as string;
 ---
 
 <Layout title={`${project.title} Demo`}>
   <div class="container mx-auto px-4 py-8">
     <nav class="mb-8">
-      <a href={`/projects/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+      <a href={`/projects/${id}`} class="text-accent hover:text-accent-light">
         ← Back to Project
       </a>
     </nav>
 
     <h1 class="text-4xl font-bold mb-8">{project.title} Demo</h1>
 
-    {DemoComponent ? (
-      <DemoComponent client:load />
-    ) : (
+    {id === 'secure-messaging-app' && (
+      <MessengerDemo client:only="react" />
+    )}
+
+    {id !== 'secure-messaging-app' && (
       <div class="text-center py-12">
         <p class="text-xl mb-4">Demo coming soon!</p>
         <p class="text-accent-light/80">
@@ -45,7 +48,7 @@ const DemoComponent = demoComponents[Astro.params.id as string];
           <a href={project.github} class="text-accent hover:text-accent-light">
             View Source Code
           </a>
-          <a href={`/docs/${Astro.params.id}`} class="text-accent hover:text-accent-light">
+          <a href={`/docs/${id}`} class="text-accent hover:text-accent-light">
             Read Documentation
           </a>
         </div>

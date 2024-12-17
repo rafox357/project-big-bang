@@ -1,13 +1,11 @@
 import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
+import react from "@astrojs/react";
 
+// https://astro.build/config
 export default defineConfig({
+  integrations: [tailwind(), react()],
+  site: 'https://rafox357.github.io',
   base: '/project-big-bang',
-  integrations: [
-    react({
-      include: ['**/react/**', '**/accessibility/**', '**/interactive/**']
-    }), 
-    tailwind()
-  ],
+  output: 'static',
 });
