@@ -7,7 +7,6 @@ import A11yControls from './A11yControls';
   <div class="a11y-wrapper">
     <slot />
     <A11yControls client:load />
-    <slot />
   </div>
 </A11yProvider>
 
@@ -22,23 +21,5 @@ import A11yControls from './A11yControls';
   .high-contrast {
     --accent: 0, 255, 255;
     --accent-light: 255, 255, 255;
-    --accent-dark: 0, 0, 0;
-  }
-
-  .reduce-motion * {
-    animation: none !important;
-    transition: none !important;
-  }
-
-  /* Focus styles */
-  .a11y-wrapper :is(a, button, input, select, textarea):focus-visible {
-    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-[#13151a];
-  }
-
-  /* Skip link */
-  .skip-to-content {
-    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4
-           focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-white
-           focus:rounded-lg focus:shadow-lg;
   }
 </style>
