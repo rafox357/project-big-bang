@@ -9,6 +9,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest  # Run the job on a GitHub-hosted Ubuntu machine
+    permissions:
+      contents: write
 
     steps:
       # Step 1: Checkout the repository
@@ -20,6 +22,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18  # Use Node.js version 18
+          cache: 'npm'
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -27,14 +30,20 @@ jobs:
 
       # Step 4: Build the Astro project
       - name: Build project
-        run: |
-          npm run build
-          touch dist/.nojekyll
+        run: npm run build
 
-      # Step 5: Deploy to GitHub Pages
+      # Step 5: Disable Jekyll
+      - name: Disable Jekyll
+        run: |
+          touch dist/.nojekyll
+          echo "Disabled Jekyll processing"
+
+      # Step 6: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           enable_jekyll: false
+          cname: ${{ secrets.CNAME }}  # Optional: If you have a custom domain
+          force_orphan: true  # This will only keep the latest commit in the gh-pages branch
