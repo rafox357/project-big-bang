@@ -1,26 +1,24 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { categories } from '../../data/projects';
-import MessengerDemo from '../../components/interactive/MessengerDemo';
+import { demoComponents } from '../../data/demoComponents';
 
 export async function getStaticPaths() {
   const paths = categories.flatMap(category => 
-    category.projects.map(project => ({
-      params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
-      props: { project }
-    }))
+    category.projects
+      .filter(project => {
+        const projectId = project.title.toLowerCase().replace(/\s+/g, '-');
+        return projectId in demoComponents;
+      })
+      .map(project => ({
+        params: { id: project.title.toLowerCase().replace(/\s+/g, '-') },
+        props: { project }
+      }))
   );
   return paths;
 }
 
 const { project } = Astro.props;
-
-// Demo components mapping
-const demoComponents = {
-  'secure-messaging-app': MessengerDemo,
-  // Add more demo components as they become available
-};
-
 const DemoComponent = demoComponents[Astro.params.id as string];
 ---
 

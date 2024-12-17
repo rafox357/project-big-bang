@@ -2,10 +2,13 @@
 import Layout from '../layouts/Layout.astro';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import Dashboard from '../components/dashboard/Dashboard';
+import { AuthProvider } from '../contexts/AuthContext';
 ---
 
 <Layout title="Dashboard | Project Big Bang">
-  <ProtectedRoute client:load>
-    <Dashboard client:load />
-  </ProtectedRoute>
+  <AuthProvider client:load>
+    <ProtectedRoute client:load>
+      <Dashboard client:load />
+    </ProtectedRoute>
+  </AuthProvider>
 </Layout>

@@ -21,5 +21,8 @@
   "search.exclude": {
     "**/node_modules": true,
     "**/dist": true
+  },
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": "file:///Users/rafa/CascadeProjects/project-x/.github/workflows/deploy.yml"
   }
 }
